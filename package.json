@@ -1,0 +1,42 @@
+{
+  "name": "vertical-list-with-multiple-drop-targets",
+  "version": "0.0.1",
+  "description": "An example of having multiple drop targets using react-beautiful-dnd",
+  "keywords": [],
+  "homepage": "https://codesandbox.io/s/k260nyxq9v",
+  "main": "index.js",
+  "dependencies": {
+    "babel-preset-react-hmre": "^1.1.1",
+    "css-loader": "^1.0.1",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "html-webpack-plugin": "^3.2.0",
+    "lodash": "^4.17.11",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.1.1",
+    "redux": "^4.0.1",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-merge": "^4.1.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.6",
+    "@babel/helper-module-imports": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/preset-env": "^7.1.6",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.4",
+    "react-grid-layout": "^0.16.6",
+    "react-scripts": "^1.0.0",
+    "uglifyjs-webpack-plugin": "^2.0.1",
+    "webpack-dev-server": "^3.1.10"
+  },
+  "scripts": {
+    "start": "npm run dev",
+    "api": "",
+    "dev": "webpack-dev-server --hot --inline",
+    "build": "webpack --config webpack.prod.js"
+  }
+}
