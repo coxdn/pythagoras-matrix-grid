@@ -18,11 +18,11 @@ class ExampleLayout extends React.Component {
 
   onLayoutChange = layout => {
     console.log('--- onLayoutChange ExampleLayout', layout )
-    this.setState({ layout: this.props.layoutConfig.items });
+    this.setState({ layout: this.props.layoutConfig.layout });
   };
 
   stringifyLayout() {
-    return this.props.layoutConfig.items.map(function(l) {
+    return this.props.layoutConfig.layout.map(function(l) {
       return (
         <div className="layoutItem" key={l.i}>
           <b>{l.i}</b>: [{l.x}, {l.y}, {l.w}, {l.h}]

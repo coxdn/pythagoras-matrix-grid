@@ -7,28 +7,28 @@ import { addItem } from '../AC'
 const ReactGridLayout = WidthProvider(RGL);
 // window._ = _
 class NoCompactingLayout extends React.PureComponent {
-  static defaultProps = {
-    className: "layout",
-    isResizable: false,
-    items: 7,
-    cols: 6,
-    rowHeight: 80,
-    onLayoutChange: function() {},
-    // This turns off compaction so you can place items wherever.
-    verticalCompact: false
-  }
+  // static defaultProps = {
+  //   className: "layout",
+  //   isResizable: false,
+  //   items: 7,
+  //   cols: 6,
+  //   rowHeight: 80,
+  //   onLayoutChange: function() {},
+  //   // This turns off compaction so you can place items wherever.
+  //   verticalCompact: false
+  // }
 
   constructor(props) {
     super(props)
     props.addItem("fdf")
     props.addItem("fdf")
     // console.log('--- constructor layout', layout)
-    const layout = this.generateLayout()
-    this.state = {layout}
+    //const layout = this.generateLayout()
+    //this.state = {layout}
   }
 
   generateDOM() {
-    return this.props.layoutConfig.items.map((item, i) => {
+    return this.props.layoutConfig.layout.map((item, i) => {
       console.log(i)
       return (
         <div key={i}>
@@ -40,7 +40,7 @@ class NoCompactingLayout extends React.PureComponent {
 
   generateLayout() {
     const p = this.props.layoutConfig;
-    return _.map(new Array(p.items.length), function(item, i) {
+    return _.map(new Array(p.items), function(item, i) {
       const y = _.result(p, "y") || Math.ceil(Math.random() * 4) + 1;
       const index = i + '_' + Math.random()
       return {
@@ -64,7 +64,7 @@ class NoCompactingLayout extends React.PureComponent {
         // layout={this.props.layoutConfig.items}
     return (
       <ReactGridLayout
-        layout={this.state.layout}
+        layout={this.props.layoutConfig.layout}
         {...this.props.layoutConfig}
         onLayoutChange={this.onLayoutChange}
       >

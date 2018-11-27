@@ -1,37 +1,41 @@
 import { ADD_ITEM, UPDATE_LAYOUT } from '../constants'
 import { getNearestFreeXY } from '../helpers'
 
-const defaultLayout = {
+const initialConfig = {
 	className: "layout",
 	isResizable: false,
-	items: [],
+	items: 0,
 	cols: 6,
 	rowHeight: 80,
+	layout: [],
 	onLayoutChange: function() {},
 	// This turns off compaction so you can place items wherever.
 	verticalCompact: false
 }
 
-export default (layout = defaultLayout, action) => {
+export default (layoutConfig = initialConfig, action) => {
     const { type, payload } = action
 
     switch (type) {
         case 'INCREMENT':
 //            return Object.assign({}, filters, { dateRange: payload.dateRange })
-            return {...layout, items: layout.items + 1}
+            return {...layoutConfig, items: layoutConfig.items + 1}
         case ADD_ITEM:
-        	const {x, y} = getNearestFreeXY(layout.items, layout.cols)
+        	const {x, y} = getNearestFreeXY(layoutConfig.layout, layoutConfig.cols)
         	console.log('in reducer:', x, y)
-        	return {...layout, items: layout.items.concat({
-        		x, y,
-        		h: 1,
-        		w: 1,
-        		i: Math.random().toString(),
-        		content: payload
-        	})}
+        	return {...layoutConfig,
+        		items: layoutConfig.items + 1,
+        		layout: layoutConfig.layout.concat({
+	        		x, y,
+	        		h: 1,
+	        		w: 1,
+	        		i: Math.random().toString(),
+	        		content: payload
+        		})
+        	}
         case UPDATE_LAYOUT:
-        	return {...layout, items: payload}
+        	return {...layoutConfig, items: payload.length, layout: payload}
     }
 
-    return layout
+    return layoutConfig
 }
