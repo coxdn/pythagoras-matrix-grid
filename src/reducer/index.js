@@ -1,9 +1,10 @@
 import {combineReducers} from 'redux'
 
 import layoutConfig from './layoutConfig'
+import layoutContent from './layoutContent'
 
 export default combineReducers({
-	layoutConfig
+	layoutConfig, layoutContent
 })
 
 // const initialState = { hideElement: false }

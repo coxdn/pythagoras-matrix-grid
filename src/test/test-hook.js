@@ -33,7 +33,7 @@ class ExampleLayout extends React.Component {
 
   render() {
     const { Layout } = this.props
-    window.__ = this
+    // window.__ = this
     console.log('--- props in ExampleLayout', this.props);
     return (
       <div>

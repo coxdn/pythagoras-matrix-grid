@@ -14,7 +14,7 @@ const initialConfig = {
 }
 
 export default (layoutConfig = initialConfig, action) => {
-    const { type, payload } = action
+    const { type, payload, randomId } = action
 
     switch (type) {
         case 'INCREMENT':
@@ -22,18 +22,18 @@ export default (layoutConfig = initialConfig, action) => {
             return {...layoutConfig, items: layoutConfig.items + 1}
         case ADD_ITEM:
         	const {x, y} = getNearestFreeXY(layoutConfig.layout, layoutConfig.cols)
-        	console.log('in reducer:', x, y)
+        	// console.log('in reducer:', x, y, layoutConfig)
         	return {...layoutConfig,
         		items: layoutConfig.items + 1,
         		layout: layoutConfig.layout.concat({
 	        		x, y,
 	        		h: 1,
 	        		w: 1,
-	        		i: Math.random().toString(),
-	        		content: payload
+	        		i: randomId
         		})
         	}
         case UPDATE_LAYOUT:
+        	console.log('--- UPDATE_LAYOUT', payload)
         	return {...layoutConfig, items: payload.length, layout: payload}
     }
 
