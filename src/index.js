@@ -1,15 +1,17 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import Root from './components/Root'
+import React from 'react';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
 
-// Put the things into the DOM!
-ReactDOM.render(<Root />, document.getElementById('root'))
-// document.addEventListener("DOMContentLoaded", function() {
-//     // const contentDiv = ;
-//     const gridProps = window.gridProps || {};
-//     ReactDOM.render(React.createElement(Root, gridProps), document.getElementById("root"));
-// });
+import { store } from './_helpers';
+import { App } from './App';
 
+// setup fake backend
+import { configureFakeBackend } from './_helpers';
+configureFakeBackend();
 
-// var DevLayout = require("./test/11-no-vertical-compact.js");
-// require("./test/test-hook.js")(DevLayout);
+render(
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById('app')
+);
