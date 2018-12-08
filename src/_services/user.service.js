@@ -1,27 +1,51 @@
 import { authHeader } from '../_helpers';
+import obj2fd from 'obj2fd'
+
+const remoteServerAjax = '/ajax.php';
+const ajax = {
+    login: `${remoteServerAjax}?login`,
+    register: `${remoteServerAjax}?register`,
+    delete: `${remoteServerAjax}?delete`,
+    logout: `${remoteServerAjax}?logout`,
+    getCurrent: `${remoteServerAjax}?getCurrent`,
+}
+
+// const ajax = {
+//     login: `/users/authenticate`,
+//     register: `/users/register`,
+//     auth: `${remoteServerAjax}?auth`,
+// }
 
 export const userService = {
     login,
     logout,
     register,
-    getAll,
+    getCurrent,
     getById,
     update,
     delete: _delete
 };
 
+
+const getFormData = object => Object.keys(object).reduce((formData, key) => {
+    formData.append(key, object[key]);
+    return formData;
+}, new FormData());
+
 function login(username, password) {
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-    };
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'data='+JSON.stringify({ username, password })
+    }
+    // console.log('--- userService.login', JSON.stringify({ username, password }))
 
-    return fetch(`/users/authenticate`, requestOptions)
-        .then(handleResponse)
+    return fetch(`${ajax.login}`, requestOptions)
+        .then(response => handleResponse(response))
         .then(user => {
+            console.log('--- then __', user, '1232')
             // login successful if there's a jwt token in the response
-            if (user.token) {
+            if (user.id) {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
             }
@@ -32,16 +56,31 @@ function login(username, password) {
 
 function logout() {
     // remove user from local storage to log user out
+    // console.log('--- logout', authHeader())
     localStorage.removeItem('user');
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    }
+
+    return fetch(`${ajax.logout}`, requestOptions).then(handleResponse)
 }
 
-function getAll() {
+function getCurrent() {
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
     };
 
-    return fetch(`/users`, requestOptions).then(handleResponse);
+    return fetch(`${ajax.getCurrent}`, requestOptions)
+        .then(handleResponse)
+        .then(user => {
+            // console.log('--- user', user)
+            if(user == null || user == false) {
+                logout();
+                location.reload(true);
+            }
+        });
 }
 
 function getById(id) {
@@ -56,11 +95,11 @@ function getById(id) {
 function register(user) {
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
-    };
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'data='+JSON.stringify(user)
+    }
 
-    return fetch(`/users/register`, requestOptions).then(handleResponse);
+    return fetch(`${ajax.register}`, requestOptions).then(handleResponse)
 }
 
 function update(user) {
@@ -76,16 +115,19 @@ function update(user) {
 // prefixed function name with underscore because delete is a reserved word in javascript
 function _delete(id) {
     const requestOptions = {
-        method: 'DELETE',
-        headers: authHeader()
+        method: 'POST',
+        headers: { ...authHeader(), 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'data='+JSON.stringify({ id })
     };
 
-    return fetch(`/users/${id}`, requestOptions).then(handleResponse);
+    return fetch(`${ajax.delete}`, requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
+        
+        // console.log('--- fetch response', text, data);
         if (!response.ok) {
             if (response.status === 401) {
                 // auto logout if 401 response returned from api
@@ -93,10 +135,10 @@ function handleResponse(response) {
                 location.reload(true);
             }
 
-            const error = (data && data.message) || response.statusText;
+            const error = (data /*&& data.message*/) || response.statusText;
             return Promise.reject(error);
         }
-
+        console.log('--- fetch response 2');
         return data;
     });
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { connect } from 'react-redux'
-import "../../css/styles.css"
+import "../../css/grid-styles.css"
 import "../../css/example-styles.css"
 typeof window !== "undefined" && (window.React = React); // for devtools
 

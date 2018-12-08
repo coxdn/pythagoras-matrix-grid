@@ -1,0 +1,13 @@
+div.matrix {
+    display: flex;
+    border: 1px solid #e2e2e2;
+    border-radius: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+div.matrix div {
+    display: inline-block;
+    text-align: center;
+    flex: auto;
+}

@@ -5,8 +5,8 @@ const initialConfig = {
 	className: "layout",
 	isResizable: false,
 	items: 0,
-	cols: 6,
-	rowHeight: 80,
+	cols: 4,
+	rowHeight: 100,
 	layout: [],
 	onLayoutChange: function() {},
 	// This turns off compaction so you can place items wherever.

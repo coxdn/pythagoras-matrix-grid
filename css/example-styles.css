@@ -15,6 +15,9 @@ body {
   margin-top: 10px;
   padding: 10px;
 }
+.jumbotron {
+  min-height: 1000px;
+}
 .columns {
   -moz-columns: 120px;
   -webkit-columns: 120px;
@@ -24,8 +27,9 @@ body {
   box-sizing: border-box;
 }
 .react-grid-item:not(.react-grid-placeholder) {
-  background: #ccc;
-  border: 1px solid black;
+  background: #ececec;
+  border: 1px solid #9c9c9c;
+  border-radius: 5px;
 }
 .react-grid-item.resizing {
   opacity: 0.9;

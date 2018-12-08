@@ -11,6 +11,13 @@ module.exports = {
         publicPath: '/static/'
     },
     devServer: {
+        proxy: {
+            '/ajax.php': {
+                target: 'http://cvetok.zzz.com.ua',
+                secure: false,
+                changeOrigin: true
+            }
+        },
         historyApiFallback: true
     },
     "module": {
@@ -45,11 +52,15 @@ module.exports = {
                 // }
             },
             {
-                test: /\.css/,
+                test: /\.css$/,
                 use:[
                     { loader: 'style-loader' },
                     { loader: 'css-loader' }
                 ]
+            },
+            {
+                test: /\.(png|jpeg|ttf)$/,
+                use: { loader: 'url-loader', options: { limit: 8192 } } 
             }
         ]
     },
