@@ -1,6 +1,4 @@
-import { userConstants } from '../_constants';
-// import { ADD_ITEM, UPDATE_LAYOUT } from '../constants'
-// import { getNearestFreeXY } from '../helpers'
+import { layoutConstants } from '../_constants';
 
 const initialLayoutContent = {}
 
@@ -8,11 +6,18 @@ export const layoutContent = (layoutContent = initialLayoutContent, action) => {
     const { type, payload, randomId } = action
 
     switch (type) {
-        case userConstants.ADD_ITEM:
+        case layoutConstants.ADD_ITEM:
+            console.log('--- payload,,', payload)
         	return {
         		...layoutContent,
         		[randomId]: payload
         	}
+		case layoutConstants.REMOVE_ITEM:
+			const {...tmpContent} = {...layoutContent}
+			delete tmpContent[payload.id]
+			return {
+				...tmpContent
+			}
     }
 
     return layoutContent

@@ -1,17 +1,17 @@
 import { alertConstants } from '../_constants';
 
-export const alertActions = {
+export const userAlertActions = {
     success,
     error,
     clear
 };
 
 function success(message) {
-    return { type: alertConstants.SUCCESS, message };
+    return { type: alertConstants.AUTH_SUCCESS, message };
 }
 
 function error(message) {
-    return { type: alertConstants.ERROR, message };
+    return { type: alertConstants.AUTH_ERROR, message };
 }
 
 function clear() {

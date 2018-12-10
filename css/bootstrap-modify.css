@@ -1,0 +1,30 @@
+.container {
+  margin-right: 0;
+  margin-left: 0;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.jumbotron {
+  min-width: 970px;
+}
+
+@media (min-width: 768px) {
+  .col-sm-offset-1 {
+    margin-left: 1%;
+  }
+  .container {
+    min-width: 970px;
+    width: 100%;
+  }
+}
+
+div.logout {
+  float: right; margin-right: 3%;
+}
+
+
+/* select-search */
+.select-search-box__option {
+  padding: 5px 5px;
+  white-space: normal;
+}

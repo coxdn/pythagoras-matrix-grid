@@ -1,5 +1,4 @@
 import { authHeader } from '../_helpers';
-import obj2fd from 'obj2fd'
 
 const remoteServerAjax = '/ajax.php';
 const ajax = {
@@ -35,6 +34,7 @@ const getFormData = object => Object.keys(object).reduce((formData, key) => {
 function login(username, password) {
     const requestOptions = {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'data='+JSON.stringify({ username, password })
     }
@@ -43,10 +43,8 @@ function login(username, password) {
     return fetch(`${ajax.login}`, requestOptions)
         .then(response => handleResponse(response))
         .then(user => {
-            console.log('--- then __', user, '1232')
-            // login successful if there's a jwt token in the response
+            // login successful if there's a "id" in the response
             if (user.id) {
-                // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
             }
 
@@ -69,32 +67,35 @@ function logout() {
 function getCurrent() {
     const requestOptions = {
         method: 'GET',
+        credentials: 'same-origin',
         headers: authHeader()
     };
 
     return fetch(`${ajax.getCurrent}`, requestOptions)
         .then(handleResponse)
         .then(user => {
-            // console.log('--- user', user)
             if(user == null || user == false) {
-                logout();
-                location.reload(true);
+                logout()
+                location.reload(true)
             }
-        });
+
+            return user
+        })
 }
 
 function getById(id) {
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
-    };
+    }
 
-    return fetch(`/users/${id}`, requestOptions).then(handleResponse);
+    return fetch(`/users/${id}`, requestOptions).then(handleResponse)
 }
 
 function register(user) {
     const requestOptions = {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'data='+JSON.stringify(user)
     }
@@ -135,7 +136,7 @@ function handleResponse(response) {
                 location.reload(true);
             }
 
-            const error = (data /*&& data.message*/) || response.statusText;
+            const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
         }
         console.log('--- fetch response 2');

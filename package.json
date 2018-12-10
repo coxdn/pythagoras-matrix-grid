@@ -1,5 +1,5 @@
 {
-  "name": "react-redux-registration-login-example",
+  "name": "Pythagoras matrix grid",
   "version": "0.0.0",
   "private": true,
   "dependencies": {
@@ -9,7 +9,7 @@
     "history": "4.7.2",
     "html-webpack-plugin": "^3.2.0",
     "lodash": "^4.17.11",
-    "obj2fd": "^1.0.6",
+    "moment": "^2.22.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-redux": "^5.1.1",

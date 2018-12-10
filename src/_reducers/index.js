@@ -2,15 +2,15 @@ import { combineReducers } from 'redux';
 
 import { authentication } from './authentication.reducer';
 import { registration } from './registration.reducer';
-import { users } from './users.reducer';
+import { peoples } from './peoples.reducer';
 import { alert } from './alert.reducer';
-import { layoutConfig } from './layoutConfig'
-import { layoutContent } from './layoutContent'
+import { layoutConfig } from './layoutConfig.reducer'
+import { layoutContent } from './layoutContent.reducer'
 
 const rootReducer = combineReducers({
   authentication,
   registration,
-  users,
+  peoples,
   alert,
   layoutConfig,
   layoutContent

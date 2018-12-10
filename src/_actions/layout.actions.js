@@ -1,21 +1,37 @@
-import { userConstants } from '../_constants'
+import { layoutConstants } from '../_constants'
 
 export const layoutActions = {
 	add,
-	updateAll
+    update,
+    remove,
+    updateAll,
 }
 
 function add(content) {
     return {
-        type: userConstants.ADD_ITEM,
+        type: layoutConstants.ADD_ITEM,
         payload: content,
         generateId: true
     }
 }
 
+function update(id, content) {
+    return {
+        type: layoutConstants.UPDATE_ITEM,
+        payload: {id, content}
+    }
+}
+
+function remove(id) {
+    return {
+        type: layoutConstants.REMOVE_ITEM,
+        payload: {id}
+    }
+}
+
 function updateAll(layout) {
     return {
-        type: userConstants.UPDATE_LAYOUT,
-        payload: layout
+        type: layoutConstants.UPDATE_LAYOUT,
+        payload: {layout}
     }	
 }

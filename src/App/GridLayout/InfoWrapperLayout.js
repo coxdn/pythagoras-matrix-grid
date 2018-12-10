@@ -1,25 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { connect } from 'react-redux'
-import "../../css/grid-styles.css"
-import "../../css/example-styles.css"
-typeof window !== "undefined" && (window.React = React); // for devtools
+import "../../../css/grid-styles.css"
+import "../../../css/info-wrapper-layout-styles.css"
 
-class ExampleLayout extends React.Component {
+// typeof window !== "undefined" && (window.React = React) // for devtools
+
+class InfoWrapperLayout extends React.Component {
   constructor(props) {
     super(props)
     this.state = { layout: [] }
     // this.state = props.layoutConfig.items
   }
 
-  componentReceiveProps(nextProps) {
-    console.log('--- componentReceiveProps')
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   console.log('--- componentWillReceiveProps')
+  // }
 
   onLayoutChange = layout => {
-    console.log('--- onLayoutChange ExampleLayout', layout )
-    this.setState({ layout: this.props.layoutConfig.layout });
-  };
+    // console.log('--- onLayoutChange ExampleLayout', layout )
+    this.setState({ layout: this.props.layoutConfig.layout })
+  }
 
   stringifyLayout() {
     return this.props.layoutConfig.layout.map(function(l) {
@@ -27,14 +28,14 @@ class ExampleLayout extends React.Component {
         <div className="layoutItem" key={l.i}>
           <b>{l.i}</b>: [{l.x}, {l.y}, {l.w}, {l.h}]
         </div>
-      );
-    });
+      )
+    })
   }
 
   render() {
     const { Layout } = this.props
     // window.__ = this
-    console.log('--- props in ExampleLayout', this.props);
+    // console.log('--- props in ExampleLayout', this.props)
     return (
       <div>
         <div className="layoutJSON">
@@ -47,6 +48,7 @@ class ExampleLayout extends React.Component {
   }
 }
 
-export default connect(state => ({
+const connectedInfoWrapperLayout = connect(state => ({
   layoutConfig: state.layoutConfig
-}))(ExampleLayout)
+}))(InfoWrapperLayout)
+export {connectedInfoWrapperLayout as InfoWrapperLayout}
