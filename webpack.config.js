@@ -20,7 +20,9 @@ module.exports = {
                 changeOrigin: true
             }
         },
-        historyApiFallback: true
+        historyApiFallback: {
+            index: 'app.html'
+        }
     },
     "module": {
         "rules": [

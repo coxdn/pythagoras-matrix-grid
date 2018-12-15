@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { NoCompactingLayout, InfoWrapperLayout } from "../GridLayout"
 import { PeoplesSearch } from "../PeoplesSearch"
+import { ModalEdit } from "../ModalEdit"
 import { userActions } from '../../_actions'
 import '../../../node_modules/react-select-search/style.css'
 
@@ -11,13 +12,13 @@ class HomePage extends React.Component {
         this.props.dispatch(userActions.getCurrent())
     }
 
-    handleDeleteUser(id) {
-        return (e) => this.props.dispatch(userActions.delete(id))
-    }
+    // handleDeleteUser(id) {
+    //     return (e) => this.props.dispatch(userActions.delete(id))
+    // }
 
     render() {
-        const { user, users } = this.props
-        console.log('this.props', this.props)
+        const { users } = this.props
+        console.log('--- HomePage render this.props', this.props)
          // col-md-offset-3
         return (
             <div className="col-md-6">
@@ -25,6 +26,7 @@ class HomePage extends React.Component {
                 <div id="layout">
                     <InfoWrapperLayout Layout={NoCompactingLayout} />
                 </div>
+                <ModalEdit />
             </div>
         )
 
@@ -50,14 +52,4 @@ class HomePage extends React.Component {
     }
 }
 
-function mapStateToProps(state) {
-    const { users, authentication } = state
-    const { user } = authentication
-    return {
-        user,
-        users
-    }
-}
-
-const connectedHomePage = connect(mapStateToProps)(HomePage)
-export { connectedHomePage as HomePage }
+export { HomePage }

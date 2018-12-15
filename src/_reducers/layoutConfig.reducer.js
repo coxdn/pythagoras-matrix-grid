@@ -10,16 +10,13 @@ const initialConfig = {
 	layout: [],
 	onLayoutChange: function() {},
 	// This turns off compaction so you can place items wherever.
-	verticalCompact: false
+	compactType: null
 }
 
 export const layoutConfig = (layoutConfig = initialConfig, action) => {
     const { type, payload, randomId } = action
     
     switch (type) {
-        case 'INCREMENT':
-//            return Object.assign({}, filters, { dateRange: payload.dateRange })
-            return {...layoutConfig, items: layoutConfig.items + 1}
         case layoutConstants.ADD_ITEM:
         	const {x, y} = getNearestFreeXY(layoutConfig.layout, layoutConfig.cols)
         	// console.log('in reducer:', x, y, layoutConfig)
@@ -42,8 +39,8 @@ export const layoutConfig = (layoutConfig = initialConfig, action) => {
                 layout: layout.filter(item => item.i!=id)
             }
 
-        case layoutConstants.UPDATE_LAYOUT:
-        	// console.log('--- UPDATE_LAYOUT', payload)
+        case layoutConstants.UPDATE_ALL:
+        	// console.log('--- UPDATE_ALL', payload)
             const {layout: _layout} = payload
         	return {...layoutConfig, items: _layout.length, layout: _layout}
     }

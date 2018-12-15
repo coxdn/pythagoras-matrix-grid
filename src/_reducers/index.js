@@ -1,19 +1,21 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from 'redux'
 
-import { authentication } from './authentication.reducer';
-import { registration } from './registration.reducer';
-import { peoples } from './peoples.reducer';
-import { alert } from './alert.reducer';
+import { authentication } from './authentication.reducer'
+import { registration } from './registration.reducer'
+import { peoples } from './peoples.reducer'
+import { _alert } from './alert.reducer'
 import { layoutConfig } from './layoutConfig.reducer'
 import { layoutContent } from './layoutContent.reducer'
+import { editor } from './editor.reducer'
 
 const rootReducer = combineReducers({
   authentication,
   registration,
   peoples,
-  alert,
+  _alert,
   layoutConfig,
-  layoutContent
-});
+  layoutContent,
+  editor
+})
 
-export default rootReducer;
+export default rootReducer

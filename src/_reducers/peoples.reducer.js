@@ -1,28 +1,50 @@
-import { userConstants } from '../_constants'
+import { userConstants, editConstants } from '../_constants'
 
-const initState = {items: [{name: 'Загрузка...', value: 'loading'}]}
+const initState = {items: [{name: 'Загрузка...', value: '_'}]}
 
 export function peoples(state = initState, action) {
+  let peoples
   switch (action.type) {
-    case userConstants.GETALL_REQUEST:
-      return {
-        ...state,
-        loading: true
+      case userConstants.GETALL_REQUEST:
+          return {
+            ...state,
+            loading: true
+          }
+
+      case userConstants.GETALL_SUCCESS:
+          if(!action.data.peoples) return { items: [{name: 'Здесь пока пусто', value: '_'}] }
+          peoples = action.data.peoples.map(item => {
+            item['tagSearch'] = item.tags.map(tag => tag.value).join(', ')
+            return item
+          })
+          return {
+            items: peoples
+          }
+
+      case editConstants.SAVE_SUCCESS:
+          const { people } = action.payload
+          console.log('--- peoples.reducer people=', people)
+          // debugger
+          const tmpPeople = state.items
+            .map((item, i) => ({value: item.value, i}))
+            .filter(item => item.value==people.value)
+          if(tmpPeople.length) {
+            peoples = state.items.slice()
+            peoples[tmpPeople[0].i] = people
+            return {
+              items: peoples
+            }
+          }
+          return {
+            items: state.items.concat(people)
+          }
+
+      case userConstants.GETALL_FAILURE:
+          return {
+            ...state,
+            error: action.error
       }
-    case userConstants.GETALL_SUCCESS:
-      const peoples = action.data.peoples.map(item => {
-        item['tagSearch'] = item.tags.map(tag => tag.value).join(', ')
-        return item
-      })
-      return {
-        items: peoples
-      }
-    case userConstants.GETALL_FAILURE:
-      return {
-        ...state,
-        error: action.error
-      }
-    case userConstants.DELETE_REQUEST:
+    /*case userConstants.DELETE_REQUEST:
       // add 'deleting:true' property to people being deleted
       return {
         ...state,
@@ -51,7 +73,7 @@ export function peoples(state = initState, action) {
 
           return people
         })
-      }
+      }*/
     default:
       return state
   }

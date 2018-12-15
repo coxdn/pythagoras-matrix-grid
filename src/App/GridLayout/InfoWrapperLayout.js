@@ -38,10 +38,10 @@ class InfoWrapperLayout extends React.Component {
     // console.log('--- props in ExampleLayout', this.props)
     return (
       <div>
-        <div className="layoutJSON">
+        {null /*<div className="layoutJSON">
           Displayed as <code>[x, y, w, h]</code>:
           <div className="columns">{this.stringifyLayout()}</div>
-        </div>
+        </div>*/}
         <Layout onLayoutChange={this.onLayoutChange} />
       </div>
     )

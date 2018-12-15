@@ -4,11 +4,17 @@ import SelectSearch from 'react-select-search'
 import { layoutActions } from '../../_actions'
 
 class PeoplesSearch extends React.Component {
-    constructor(props) {
-        super(props)
-        this.handleChange = this.handleChange.bind(this)
-    }
+    // constructor(props) {
+    //     super(props)
+    // }
     
+    handleChange = (value, state, props) => {
+        console.log('--- handleChange', value, state, props)
+        const id = state.clicked
+        const content = this.props.peoples.filter(item => item.value==id)[0]
+        this.props.dispatch(layoutActions.addSelected(content))
+    }
+
     render() {
         console.log('--- peoples.items', this.props.peoples)
 		return (
@@ -25,14 +31,6 @@ class PeoplesSearch extends React.Component {
                 />
 
 			)
-    }
-
-    handleChange(value, state, props) {
-        console.log('--- handleChange', value, state, props)
-        const id = state.clicked
-        const content = this.props.peoples.filter(item => item.value==id)[0]
-        this.props.dispatch(layoutActions.add(content))
-        // return [value[0]]
     }
 }
 

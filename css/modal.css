@@ -1,0 +1,29 @@
+.ReactModalPortal>div {
+	z-index: 4;
+	display: flex;
+    justify-content: center;
+}
+
+.ReactModalPortal>div>div {
+    top: auto!important;
+    left: auto!important;
+    right: auto!important;
+    bottom: auto!important;
+    align-self: center;
+    width: 400px;
+    min-height: 320px;
+}
+
+.modal-btns-wrapper {
+	display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+@media (max-width: 992px) {
+	.ReactModalPortal>div {
+		display: block;
+	    justify-content: left;
+	    margin: 20px;
+	}
+}

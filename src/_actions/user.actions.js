@@ -1,7 +1,7 @@
-import { userConstants } from '../_constants';
-import { userService } from '../_services';
-import { userAlertActions } from './';
-import { history } from '../_helpers';
+import { userConstants } from '../_constants'
+import { userService } from '../_services'
+import { alertUserActions } from './'
+import { history } from '../_helpers'
 
 export const userActions = {
     login,
@@ -20,15 +20,15 @@ function login(username, password) {
                 user => {
                     if(!user.loggedIn) {
                         dispatch(failure())
-                        dispatch(userAlertActions.error('Ошибка авторизации: неверный логин или пароль.'))
+                        dispatch(alertUserActions.errorAuth('Ошибка авторизации: неверный логин или пароль.'))
                     } else {
                         dispatch(success(user))
-                        history.push('/')
+                        history.push('/app.html')
                     }
                 },
                 error => {
                     dispatch(failure(error))
-                    dispatch(userAlertActions.error(error))
+                    dispatch(alertUserActions.errorAuth(error))
                 }
             )
     }
@@ -44,22 +44,40 @@ function logout() {
 }
 
 function register(user) {
+    let v = new Map();
     return dispatch => {
         dispatch(request(user))
-
+        // console.log('--- user', user)
         userService.register(user)
             .then(
-                user => { 
-                    dispatch(success())
-                    history.push('/login');
-                    dispatch(userAlertActions.success('Успешная регистрация!'));
+                response => {
+                    if(response.error) {
+                        dispatch(failure())
+                        switch(response.message) {
+                            case 'USER_EXISTS':
+                                dispatch(alertUserActions.errorRegister('Такое имя пользователя уже занято'))
+                                break;
+                            case 'FORBIDDEN_CHARS':
+                                dispatch(alertUserActions.errorRegister('Имя пользователя может содержать только латинские символы и цифры (A-z, 0-9)'))
+                                break;
+                            case 'UNKNOWN_ERROR':
+                                dispatch(alertUserActions.errorRegister('Неизвестная ошибка'))
+                                break;
+                            
+                        }
+                        
+                    } else {
+                        dispatch(success(user.username))
+                        history.push('/app.html')
+                        // dispatch(alertUserActions.success('Успешная регистрация!'))
+                    }
                 },
                 error => {
-                    dispatch(failure(error));
-                    dispatch(userAlertActions.error(error));
+                    dispatch(failure(error))
+                    dispatch(alertUserActions.errorAuth(error))
                 }
-            );
-    };
+            )
+    }
 
     function request(user) { return { type: userConstants.REGISTER_REQUEST, user } }
     function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } }
@@ -82,7 +100,6 @@ function getCurrent() {
     function failure(error) { return { type: userConstants.GETALL_FAILURE, error } }
 }
 
-// prefixed function name with underscore because delete is a reserved word in javascript
 function _delete(id) {
     return dispatch => {
         dispatch(request(id))
@@ -95,7 +112,7 @@ function _delete(id) {
                 error => {
                     dispatch(failure(id, error))
                 }
-            );
+            )
     }
 
     function request(id) { return { type: userConstants.DELETE_REQUEST, id } }

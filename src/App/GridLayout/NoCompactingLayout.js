@@ -1,53 +1,75 @@
 import React from "react"
-import _ from "lodash"
+// import _ from "lodash"
 import RGL, { WidthProvider } from "react-grid-layout"
 import { connect } from 'react-redux'
-import { layoutActions, layoutAlertActions } from '../../_actions'
-import { psy } from '../../_helpers'
+import { DateInput } from '../_components'
+import { layoutActions, alertLayoutActions, modalActions } from '../../_actions'
+import { pythagoras, getCreationID } from '../../_helpers'
 
 import "../../../css/matrix-styles.css"
 
 const ReactGridLayout = WidthProvider(RGL)
 
 class NoCompactingLayout extends React.PureComponent {
-  /*static defaultProps = {
-    className: "layout",
-    isResizable: false,
-    items: 7,
-    cols: 6,
-    rowHeight: 80,
-    onLayoutChange: function() {},
-    // This turns off compaction so you can place items wherever.
-    verticalCompact: false
-  }*/
-
-  constructor(props) {
-    super(props)
-    /*if(props.layoutConfig.items==0) {
-        props.dispatch(layoutActions.add("test one"))
-        props.dispatch(layoutActions.add("test two"))
-        props.dispatch(layoutActions.add("test three"))
-        props.dispatch(layoutActions.add("test four"))
-    }*/
-    this.handleCreateNew = this.handleCreateNew.bind(this)
-    this.handleInputChange = this.handleInputChange.bind(this)
+  handleRemove = id => () => {this.props.dispatch(layoutActions.remove(id))}
+  
+  editItem = id => () => this.props.dispatch(modalActions.editing(id, this.props.content[id]))
+  createNew = id => () => this.props.dispatch(modalActions.creating(id, this.props.content[id]))
+  creatingNew = date => {
+    const { creationID, dispatch } = this.props
+    dispatch(layoutActions.createNew(creationID, date))
   }
 
-  generateDOM() {
-    const { config, layout, content } = this.props
-    return layout.map((item, i) => {
-      let inner
+  hookRef = node => {this.inputNode = node}
+
+  handleItemClick = ev => {
+    ev.stopPropagation()
+    // console.log('--- this in handleItemClick', this, this.inputNode)
+    if(this.inputNode)
+    this.inputNode.focus()
+  }
+
+
+  onLayoutChange = layout => {
+    this.props.dispatch(layoutActions.updateAll(layout))
+    // console.log('--- onLayoutChange in NoCompactingLayout', layout)
+    this.props.onLayoutChange(layout)
+    // console.log('--- this in onLayoutChange', this)
+  }
+
+  createEmpty = ev => {
+    const { dispatch } = this.props
+    if(this.inputNode) {
+      const { creationID } = this.props
+      dispatch(layoutActions.remove(creationID))
+    } else {
+      dispatch(layoutActions.addEmpty('В формате ДД.ММ.ГГГГ'))
+    }
+  }
+
+
+  generateDOM = ({ content }) => {
+    return Object.keys(content).map((i) => {
+      let innerJSX
+      const item = {i}
       const _content = content[item.i]
 
-      if (_content.createNew) {
-        inner = <input placeholder="Введите дату..." onChange={this.handleInputChange} size="10" onBlur={this.handleRemove(item.i)} ref={(node) => {this.inputNode = node}} />
+      if (_content.createEmpty) {
+        innerJSX = [
+          <div key={1} className="inter clear-button btn btn-default btn1" title="Убрать" onClick={this.handleRemove(item.i)}></div>,
+          <DateInput key={2} onHookRef={this.hookRef} onCreatingNew={this.creatingNew} />
+        ]
       } else {
-        const {digits, fullDate, intermediate} = psy.calculate(_content.date)
-        const cd = x => psy.composeDigit(x, digits[x]) // c -> Compose, and d -> Digit
-        inner = [
-            <div key={1} className="inter clear-button btn btn-primary btn1" title="Убрать" onClick={this.handleRemove(item.i)}></div>,
-            <div key={2} className="inter clear-button btn btn-primary btn2" title="Изменить"></div>,
-            <div key={3} className="matrix-people-name">{_content.name}</div>,
+        const {digits, fullDate, intermediate} = pythagoras.calculate(_content.date)
+        const cd = x => pythagoras.composeDigit(x, digits[x]) // c -> Compose, and d -> Digit
+        const name = _content.name ? _content.name : 
+            <button type="button" className="btn btn-default btn-sm" onClick={this.createNew(item.i)}>
+              <span className="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Сохранить
+            </button>
+        innerJSX = [
+            <div key={1} className="inter clear-button btn btn-default btn1" title="Убрать" onClick={this.handleRemove(item.i)} onMouseDown={ev => ev.stopPropagation()}></div>,
+            <div key={2} className="inter clear-button btn btn-default btn2" title="Изменить" onClick={this.editItem(item.i)} onMouseDown={ev => ev.stopPropagation()}></div>,
+            <div key={3} className="matrix-people-name">{name}</div>,
             <div key={4} className="intermediate">
               <div className="inter">{intermediate}</div>
               <div className="date">{fullDate}</div>
@@ -60,47 +82,15 @@ class NoCompactingLayout extends React.PureComponent {
             </div>
         ]
       }
-      
+
       return (
         <div key={item.i} onClick={this.handleItemClick}>
-          {inner}
+          {innerJSX}
         </div>
-          )
-      
+      )
     })
   }
 
-  handleRemove = id => () => {this.props.dispatch(layoutActions.remove(id))}
-
-  handleItemClick = ev => {
-    ev.stopPropagation()
-    console.log('--- this in handleItemClick', this, this.inputNode)
-    this.inputNode.focus()
-  }
-
-
-  onLayoutChange = layout => {
-    this.props.dispatch(layoutActions.updateAll(layout))
-    console.log('--- onLayoutChange in NoCompactingLayout', layout)
-    this.props.onLayoutChange(layout)
-    console.log('--- this in onLayoutChange', this)
-  }
-
-  handleCreateNew(ev) {
-    console.log('--- handleCreateNew', this.props.content)
-    this.props.dispatch(layoutActions.add({createNew: true}))
-  }
-
-  handleInputChange(ev) {
-
-  }
-
-  handleInputClick(ev) {
-    // ev.stopPropagation()
-    // ev.preventDefault()
-    console.log('--- handleInputClick')
-    // ev.target.focus()
-  }
 
   componentDidUpdate() {
     if(this.inputNode)
@@ -108,42 +98,36 @@ class NoCompactingLayout extends React.PureComponent {
   }
 
   render() {
-    console.log('--- props in render NoCompactingLayout', this.props)
-    window.__ = this
+    const {config, layout, content, creationID} = this.props
 
-    const textOnGrid = !this.props.config.items ? <div className='text-on-grid'>Нажмите сюда чтобы ввести новую дату</div> : null
     return (
-      <div className='grid-layout-wrapper' onClick={this.handleCreateNew}>
-        {textOnGrid}
+      <div className='grid-layout-wrapper' onClick={this.createEmpty}>
         <ReactGridLayout
-          layout={this.props.layout}
-          {...this.props.config}
+          layout={layout}
+          {...config}
           onLayoutChange={this.onLayoutChange}
-        >
-          {this.generateDOM()}
+          >
+          {this.generateDOM({content})}
         </ReactGridLayout>
+        {!creationID ? <div className='text-on-grid'>Нажмите здесь чтобы ввести новую дату</div> : null}
       </div>
     )
   }
 }
 
 
-const connectedNoCompactingLayout = connect(state => {
+const mapStateToProps = state => {
   const { layoutConfig: config, layoutContent: content, alert } = state
   const { layout } = config
+  const creationID = getCreationID(content)
   return {
     layout,
     config,
     content,
-    alert
+    alert,
+    creationID
   }
-})(NoCompactingLayout)
+}
+
+const connectedNoCompactingLayout = connect(mapStateToProps)(NoCompactingLayout)
 export {connectedNoCompactingLayout as NoCompactingLayout}
-// import func from "./test-hook.js"
-// func(NoCompactingLayout)
-
-// module.exports = NoCompactingLayout;
-
-// if (require.main === module) {
-//   require("./test-hook.js")(module.exports);
-// }

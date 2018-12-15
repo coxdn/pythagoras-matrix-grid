@@ -1,6 +1,6 @@
-import { alertConstants } from '../_constants'
+import { alertConstants, layoutConstants } from '../_constants'
 
-export function alert(state = {}, action) {
+export function _alert(state = {}, action) {
   const { id, message } = action
 
   switch (action.type) {
@@ -9,21 +9,33 @@ export function alert(state = {}, action) {
         type: 'alert-success',
         authMessage: message
       }
+
     case alertConstants.AUTH_ERROR:
+    case alertConstants.REGISTER_ERROR:
       return {
         type: 'alert-danger',
         authMessage: message
       }
-    case alertConstants.CLEAR:
+
+    case alertConstants.CLEAR_ALL:
       return {}
 
     case alertConstants.CREATE_ITEM_ERROR:
       return {
-        type: 'alert-danger',
-        createItemMessage: message,
-        id: id
+        hasError: true,
+        createItemMessage: message
       }
-    case alertConstants.CREATE_ITEM_CLEAR:
+
+    case layoutConstants.ADD_ITEM:
+      if(!message)
+        return state
+      return {
+        createItemMessage: message
+      }
+
+    case layoutConstants.REMOVE_ITEM:
+      if(action.payload.id)
+        return state
       return {}
 
     default:
