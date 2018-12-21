@@ -11,14 +11,15 @@ Folder ```php_backend``` for PHP server.
 
 ## Uses
 
-	Client
-	React:
+Client:
+
 * react / redux / thunk
 * react-router-dom
 * react-grid-layout (slightly modified)
 * react-select-search (slightly modified)
-* react-select
+* react-select-plus (slightly modified)
 * react-modal
 
-	Server
-	PHP / MySQL
+Server:
+
+* PHP / MySQL

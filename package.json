@@ -1,7 +1,7 @@
 {
   "name": "pythagoras-matrix-grid",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "babel-preset-react-hmre": "^1.1.1",
     "css-loader": "^1.0.1",
@@ -22,7 +22,6 @@
     "redux-thunk": "^2.2.0",
     "reselect": "^4.0.0",
     "style-loader": "^0.23.1",
-    "uglify-es": "^3.3.9",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",
