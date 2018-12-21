@@ -99,7 +99,7 @@ div.btn2 {
 	margin-top: 23px;
     margin-right: -19px;
     padding-left: 3px;
-    padding-right: 4px;
+    padding-right: 3px;
 }
 
 div#textWidth {
@@ -131,7 +131,11 @@ div.clear-all {
 
 div.react-grid-item.react-draggable input {
 	font-size: 16px;
-	margin: 45px 0 0 18px;
+	margin: 0px 0 0 18px;
     width: 140px;
     text-align: center;
+}
+
+div.react-grid-item.react-draggable>div>div.form-group {
+	padding-top: 45px;
 }

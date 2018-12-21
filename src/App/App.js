@@ -3,7 +3,7 @@ import { Router, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { history } from '../_helpers'
-import { alertUserActions } from '../_actions'
+import { alertActions } from '../_actions'
 import { PrivateRoute, LogoutButton } from './_components'
 import { HomePage } from './HomePage'
 import { LoginPage } from './LoginPage'
@@ -15,28 +15,29 @@ class App extends React.Component {
     constructor(props) {
         super(props)
 
-        const { dispatch } = props;
+        const { dispatch } = props
         history.listen((location, action) => {
+            console.log('--- history.listen', location, action)
             // clear alert on location change
-            dispatch(alertUserActions.clear())
+            dispatch(alertActions.clearAll())
         })
     }
 
     render() {
-        const { _alert, dispatch } = this.props
+        const { _alert, dispatch, loggedIn, loaded } = this.props
         // console.log(' ----- @@@', this.props)
         return (
             <Router history={history}>
                 <div className="jumbotron">
                     <div className="container">
-                        <PrivateRoute exact path="/app.html" component={LogoutButton} />
+                        <Route path="/app.html" component={LogoutButton} />
                         <div className="col-sm-8 col-sm-offset-1">
-                            {_alert.authMessage &&
-                                <div className={`alert ${_alert.type}`}>{_alert.authMessage}</div>
+                            {_alert.hasIn(["user", "class"]) &&
+                                <div className={`alert ${_alert.getIn(["user", "class"])}`}>{_alert.getIn(["user", "message"])}</div>
                             }
                             <div>
-                                <PrivateRoute exact path="/app.html" component={HomePage} dispatch={dispatch} />
-                                <Route path="/login" component={LoginPage} />
+                                <PrivateRoute path="/app.html" component={HomePage} dispatch={dispatch} loggedIn={loggedIn} loaded={loaded} />
+                                <Route path="/login" component={LoginPage} loggedIn={loggedIn} />
                                 <Route path="/register" component={RegisterPage} />
                             </div>
                         </div>
@@ -48,8 +49,10 @@ class App extends React.Component {
 }
 
 const connectedApp = connect(state => {
-    const {_alert} = state
+    const { _alert, authentication: { loggedIn, loaded } } = state
     return {
+        loggedIn,
+        loaded,
         _alert
     }
 })(App)

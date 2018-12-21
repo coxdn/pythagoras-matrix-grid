@@ -1,2 +1,2 @@
-export * from './InfoWrapperLayout'
-export * from './NoCompactingLayout'
+export * from './GridInfoWrapper'
+export * from './NoCompactingGrid'

@@ -1,11 +1,12 @@
 import { editService } from '../_services'
 import { editConstants } from '../_constants'
+import { alertActions } from './'
 import { pythagoras } from '../_helpers'
 
 export const modalActions = {
     hide,
-    editing,
-    creating,
+    showEditing,
+    showCreating,
     save,
     remove
 }
@@ -16,56 +17,81 @@ function hide() {
     }
 }
 
-function editing(id, data) {
+function showEditing(value) {
     return {
         type: editConstants.MODAL_EDIT_ITEM,
-        payload: {id, data},
+        payload: { value },
     }
 }
 
-function creating(id, data) {
+function showCreating(id) {
     return {
         type: editConstants.MODAL_CREATE_ITEM,
-        payload: {id, data: {...data, value: 0, name: ''}},
+        payload: { id },
     }
 }
 
 
-function save({value, id, _name, date, tags: oldTags}) {
-    console.log('--- oldTags', oldTags)
+function save({id, value, _name, date, tags: oldTags}) {
     const tags = oldTags.map(item => item.className ? {label: item.label} : {label: item.label, value: item.value})
-
     return dispatch => {
+        const checkDate = pythagoras.checkDate(date)
+        if (checkDate.error) {
+            dispatch(alertActions.modal.error(checkDate.error))
+            return
+        }
 
+        dispatch(request())
 
-        dispatch(request({_name, date, tags}))
-
-        editService.save({id: value, name: _name, date, tags})
+        editService.save({id: value, name: _name, date: checkDate.fullDate, tags})
             .then(
                 json => {
-                    if(json.error) {
+                    if (json.error) {
                         dispatch(failure(json.error))
-                        //////
+                        dispatch(alertActions.modal.error(json.error))
                     } else {
-                        dispatch(success(json.people[0]))
+                        if (value)
+                            dispatch(successEdit(json.people[0]))
+                        else
+                            dispatch(successNew(json.people[0]))
                         dispatch(hide())
                     }
                 },
                 error => {
                     dispatch(failure(error))
-                    dispatch(alertUserActions.errorAuth(error))
+                    dispatch(alertActions.modal.error(error))
                 }
             )
     }
 
-    function request(people) { return { type: editConstants.SAVE_REQUEST, payload: {_name, date, tags} } }
-    function success(people) { return { type: editConstants.SAVE_SUCCESS, payload: {value, id, people} } }
-    function failure(error) { return { type: editConstants.SAVE_FAILURE, error } }
+    function request() { return { type: editConstants.SAVE_REQUEST } }
+    function successEdit(people) { return { type: editConstants.SAVE_EDIT_SUCCESS, payload: { people } } }
+    function successNew(people) { return { type: editConstants.SAVE_NEW_SUCCESS, payload: { id, people } } }
+    function failure(error) { return { type: editConstants.SAVE_FAILURE, payload: { error } } }
 }
 
-function remove(content) {
-    return {
-        type: editConstants.MODAL_REMOVE_ITEM,
-        payload: content,
+function remove(value) {
+    return dispatch => {
+        dispatch(request())
+
+        editService.remove({id: value})
+            .then(
+                json => {
+                    if (json.error) {
+                        dispatch(failure(json.error))
+                    } else {
+                        dispatch(success(value))
+                        dispatch(hide())
+                    }
+                },
+                error => {
+                    dispatch(failure(error))
+                    dispatch(alertActions.modal.error(error))
+                }
+            )
     }
+
+    function request() { return { type: editConstants.REMOVE_REQUEST } }
+    function success(value) { return { type: editConstants.REMOVE_SUCCESS, payload: { value }, getIds: true } }
+    function failure(error) { return { type: editConstants.REMOVE_FAILURE, payload: { error } } }
 }

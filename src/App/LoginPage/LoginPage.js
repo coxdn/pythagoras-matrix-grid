@@ -27,6 +27,10 @@ class LoginPage extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this.props.dispatch(userActions.getCurrent())
+    }
+
     render() {
         const { loggingIn } = this.props
         const { username, password, submitted } = this.state
@@ -62,9 +66,10 @@ class LoginPage extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { loggingIn } = state.authentication
+    const { loggingIn, loggedIn } = state.authentication
     return {
-        loggingIn
+        loggingIn,
+        loggedIn
     }
 }
 

@@ -153,12 +153,8 @@ class Request {
 		$date = substr(preg_replace('@[^\d\.]@', '', $this->db->ads($date)), 0, 10);
 
 		if($id) {
-			$q = $this->db->query("SELECT user_id FROM birthdates WHERE id='$id'");
-			if(!$this->db->num_rows($q))
-				return ['error' => true, 'step' => 1];
-			$row = $this->db->fetch_array($q);
-			if($row['user_id']!=$user_id)
-				return ['error' => true, 'step' => 2];
+			$checkUser = $this->checkOwnershipUser($id, $user_id);
+			if($checkUser['error']) return $checkUser;
 		}
 
 		$tag_ids = array_map(function($item) {
@@ -207,19 +203,33 @@ class Request {
 		return ['error' => false, 'insert_id' => $insert_id];
 	}
 
-	function remove($id) {
+	function remove($id, $user_id) {
+		$checkUser = $this->checkOwnershipUser($id, $user_id);
+		if($checkUser['error'])
+			return $checkUser;
 		$id = $this->db->ads($id);
 		$querystring = "DELETE FROM birthdates WHERE id='$id'";
 	    $sql_query = $this->db->query($querystring);
 	    $querystring = "DELETE FROM birthdates_tags WHERE people_id='$id'";
 	    $sql_query = $this->db->query($querystring);
-	    return true;
+	    return ['error' => false];
+	}
+
+	private function checkOwnershipUser($id, $user_id) {
+		$id = $this->db->ads($id);
+		$q = $this->db->query("SELECT user_id FROM birthdates WHERE id='$id'");
+		if(!$this->db->num_rows($q))
+			return ['error' => true, 'step' => 'auth1'];
+		$row = $this->db->fetch_array($q);
+		if($row['user_id']!=$user_id)
+			return ['error' => true, 'step' => 'auth2'];
+		return ['error' => false];
 	}
 
 	private function isPeopleExists($id) {
-			$q = $this->db->query("SELECT count(1) cnt FROM birthdates b WHERE b.id='$id'");
-			$row = $this->db->fetch_array($q);
-			return $row['cnt']!=0;
+		$q = $this->db->query("SELECT count(1) cnt FROM birthdates b WHERE b.id='$id'");
+		$row = $this->db->fetch_array($q);
+		return $row['cnt']!=0;
 	}
 
 	function copyPeoples($idArr, $user_id) {

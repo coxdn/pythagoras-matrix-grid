@@ -1,9 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { NoCompactingLayout, InfoWrapperLayout } from "../GridLayout"
-import { PeoplesSearch } from "../PeoplesSearch"
-import { ModalEdit } from "../ModalEdit"
+import { NoCompactingGrid, GridInfoWrapper } from "../GridLayout"
+import { PeoplesSearchWrapper } from "../PeoplesSearch"
 import { userActions } from '../../_actions'
 import '../../../node_modules/react-select-search/style.css'
 
@@ -22,11 +21,10 @@ class HomePage extends React.Component {
          // col-md-offset-3
         return (
             <div className="col-md-6">
-                <PeoplesSearch />
+                <PeoplesSearchWrapper />
                 <div id="layout">
-                    <InfoWrapperLayout Layout={NoCompactingLayout} />
+                    <GridInfoWrapper Layout={NoCompactingGrid} />
                 </div>
-                <ModalEdit />
             </div>
         )
 

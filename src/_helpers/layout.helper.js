@@ -11,9 +11,4 @@ const getNearestFreeXY = (layout, cols) => {
     }
 }
 
-const getCreationID = (content) => {
-    const filtered = Object.keys(content).filter(item => content[item].createEmpty)
-    return filtered.length ? filtered[0] : false
-}
-
-export { getNearestFreeXY, getCreationID }
+export { getNearestFreeXY }

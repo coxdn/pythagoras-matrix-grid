@@ -9,10 +9,9 @@ class DateInput extends React.Component {
 	handleInputChange = ev => this.setState({date: ev.target.value})
 
 	handleInputKeyPress = ev => {
-		// ev.stopPropagation()
-		const { onCreatingNew } = this.props
+		const { onCalcNew } = this.props
 		const char = ev.which || ev.keyCode
-		if(char == 13) onCreatingNew(this.state.date)
+		if(char == 13) onCalcNew(this.state.date)
 	}
 
 	hookRef = node => {
@@ -20,17 +19,10 @@ class DateInput extends React.Component {
 		this.props.onHookRef(node)
 	}
 
-	// componentWillUpdate(nextProps, nextState) {
-	// 	console.log('--- DateInput.componentWillUpdate')
-	// }
-	// componentWillReceiveProps(nextProps, nextState) {
-	// 	console.log('--- DateInput.componentWillReceiveProps', this.props)
-	// }
-
 	render() {
 		const {_alert} = this.props
 		return (
-            <div className={'form-group' + (_alert.hasError ? ' has-error' : '')}>
+            <div className={'form-group' + (_alert.hasIn(["grid", "danger"]) ? ' has-error' : '')}>
                 <input
                 	className="form-control"
 		            placeholder="Введите дату..."
@@ -41,8 +33,8 @@ class DateInput extends React.Component {
 		            onMouseDown={ev => ev.stopPropagation()}
 		            ref={this.hookRef}
 		         />
-                {_alert.createItemMessage &&
-                    <div className="help-block">{_alert.createItemMessage}</div>
+                {_alert.hasIn(["grid", "message"]) &&
+                    <div className="help-block">{_alert.getIn(["grid", "message"])}</div>
                 }
             </div>
 			

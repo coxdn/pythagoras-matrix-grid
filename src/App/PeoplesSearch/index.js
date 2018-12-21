@@ -1,1 +1,1 @@
-export * from './PeoplesSearch'
+export * from './PeoplesSearchWrapper'

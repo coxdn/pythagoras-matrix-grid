@@ -1,7 +1,7 @@
 const remoteServerAjax = '/ajax.php';
 const urls = {
     save: `${remoteServerAjax}?save`,
-    remove: `${remoteServerAjax}?removePeople`
+    remove: `${remoteServerAjax}?remove`
 }
 
 
@@ -17,35 +17,22 @@ function save(content) {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'data='+JSON.stringify(content)
     }
-    // console.log('--- userService.login', JSON.stringify({ username, password }))
 
     return fetch(`${urls.save}`, requestOptions)
         .then(response => handleResponse(response))
-        /*.then(json => {
-            if (json.id) {
-            }
-
-            return json
-        })*/
 }
 
-function remove(id) {
+function remove({id}) {
+    console.log('--- edit.service id', id)
     const requestOptions = {
         method: 'POST',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'data='+JSON.stringify({ content })
+        body: 'data='+JSON.stringify({ id })
     }
-    // console.log('--- userService.login', JSON.stringify({ username, password }))
 
     return fetch(`${urls.remove}`, requestOptions)
         .then(response => handleResponse(response))
-        .then(json => {
-            if (json.id) {
-            }
-
-            return json
-        })
 }
 
 function handleResponse(response) {

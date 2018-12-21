@@ -73,6 +73,8 @@ function (_React$Component) {
         // search: search
       });
     }), "onFocus", function () {
+      _this.props.onInputChange('', _this.state.defaultOptions)
+      // console.log('--- onFocus')
       _this.setState({
         focus: true,
         options: _this.state.defaultOptions,
@@ -87,17 +89,29 @@ function (_React$Component) {
       // console.log('--- value', value)
       var options = _this.state.defaultOptions;
       options = _this.getNewOptionsList(options, value);
-      console.log('--- onChange in module', value, _this.state, _this.props)
-      _this.setState({
-        search: value,
-        options: options
+      _this.props.onInputChange(value, options)
+      // console.log('--- onChange in module', value, options)
+      _this.setState({}, () => { // <- bullshit... but it works
+        _this.setState({
+          search: value,
+          options: options
+        });
       });
     }), "onKeyPress", function (e) {
+      // console.log('--- _this.props.onInputKeyPress(e)', e)
+      if (e.toString() != "[object Object]"
+          && !_this.props.onInputKeyPress(e)) {
+        // const called = true
+        return
+      }
+      if (e.toString() == "[object Object]") return
+
       if (!_this.state.options || _this.state.options.length < 1) {
         return;
       }
       /** Enter */
-
+      // if (e.key=="Enter") return
+      console.log('--- _this.props.onInputKeyPress(e) 222', e)
 
       if (e.keyCode === 13) {
         _this.handleEnter();
@@ -132,6 +146,7 @@ function (_React$Component) {
         _this.handleEsc();
       }
     }), "toggle", function () {
+        console.log('--- toggle')
       if (_this.state.focus) {
         _this.onBlur();
       } else {
@@ -439,7 +454,7 @@ function (_React$Component) {
 
       var options = this.state.defaultOptions;
       var highlighted = this.props.multiple ? this.state.highlighted : null;
-      console.log('--- chooseOption', currentValue, search, this.state);
+      // console.log('--- chooseOption', currentValue, search, this.state);
       this.setState({
         clicked: option.value,
         value: currentValue,
@@ -489,9 +504,12 @@ function (_React$Component) {
     value: function getNewOptionsList(options, value) {
       if (options && options.length > 0 && value && value.length > 0) {
         var fuse = new _fuse.default(options, this.props.fuse);
-        return fuse.search(value);
+        // console.log('--- no normal run getNewOptionsList', value, fuse.search(value));
+        this.setState({ highlighted: 0 });
+        return fuse.search(value).map((item, index) => {
+          return {...item, index};
+        });
       }
-
       return options;
     }
   }, {
@@ -500,14 +518,15 @@ function (_React$Component) {
       var force = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
       var selected = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'hover';
 
-      if (!force && (this.props.multiple || this.state.highlighted == null || !this.select.current || !this.selectOptions.current || !this.state.focus || this.state.options.length < 1)) {
+      if (false && !force && (this.props.multiple || this.state.highlighted == null || !this.select.current || !this.selectOptions.current || !this.state.focus || this.state.options.length < 1)) {
         return;
       }
-
+      
+      if (!this.selectOptions.current) return;
       var selectedItem = this.selectOptions.current.querySelector(".".concat(_Bem.default.m(this.classes.option, selected)));
-
+      
       if (selectedItem) {
-        this.select.current.scrollTop = selectedItem.offsetTop;
+        this.select.current.scrollTop = selectedItem.offsetTop-150;
       }
     }
     /**
@@ -518,7 +537,7 @@ function (_React$Component) {
     key: "renderOption",
     value: function renderOption(option, stateValue, multiple) {
       var _this5 = this;
-
+      // console.log('--- renderOption', option)
       var elementVal = option.value;
       var element = null;
       var className = this.classes.option;
@@ -775,6 +794,8 @@ _defineProperty(SelectSearch, "defaultProps", {
   onBlur: function onBlur() {},
   onFocus: function onFocus() {},
   onChange: function onChange() {},
+  onInputChange: function onInputChange() {},
+  onInputKeyPress: function onInputKeyPress() {},
   renderOption: function renderOption(option) {
     return option.name;
   },

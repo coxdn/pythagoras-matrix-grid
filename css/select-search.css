@@ -1,0 +1,19 @@
+.avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: '50%';
+    vertical-align: 'middle';
+    margin-right: 10;
+}
+
+.select-search-box__row > span > span {
+	display: block;
+}
+
+.select-inform {
+	position: absolute;
+    z-index: 1;
+    top: 15px;
+    left: 630px;
+    width: 150px;
+}

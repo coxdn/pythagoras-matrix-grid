@@ -26,39 +26,23 @@
 
 	if($access) {
 		switch(true) {
-		// case isset($_GET["save"]):
-		// 	$savedID = $req->doSave($_POST['name'], $_POST['datebirth']);
-		// 	j(array('insert_id' => $savedID)).'___@@@___';
-		//     break;
-
-		// case isset($_GET["remove"]):
-		// 	$result = $req->remove($_POST['id']);
-		// 	j($result).'___@@@___';
-		// 	break;
-
-		// case isset($_GET["search"]):
-		// 	$searchResult = $req->doSearch($_POST['str']);
-		// 	j($searchResult);//.'___@@@___';
-		// 	break;
-
 		case isset($_GET["loadlist"]):
 			$loadResult = $req->loadList();
 			j($loadResult);//.'___@@@___';
-			break;
 
 		case isset($_GET["login"]):
 			j(array_merge($_SESSION['access'], ['loggedIn' => true]));
-			break;
 
 		case isset($_GET['logout']):
 			$_SESSION['access'] = false;
 			j(['loggedIn' => false]);
-			break;
+
+		case isset($_GET['getCurrent']) && !isset($_GET['HomePage']):
+			j(['user' => $_SESSION['access']]);
 
 		case isset($_GET['getCurrent']):
 			$peoples = $req->loadList($_SESSION['access']['id']);
 			j(['user' => $_SESSION['access'], 'peoples' => $peoples['peoples']]);
-			break;
 
 		case isset($_GET['save']):
 			$save = $req->save($data->id, $data->name, $data->date, $data->tags, $_SESSION['access']['id']);
@@ -66,7 +50,10 @@
 			j(['error' => $save['error'], 'step' => $save['step']]);
 			$updatedPeople = $req->loadList($_SESSION['access']['id'], isset($save['insert_id']) ? $save['insert_id'] : $data->id);
 			j(['error' => false, 'people' => $updatedPeople['peoples']]);
-			break;
+
+		case isset($_GET['remove']):
+			$remove = $req->remove($data->id, $_SESSION['access']['id']);
+			j(['error' => $remove['error']]);
 		}
 	}
 
@@ -80,11 +67,9 @@
 			$login = $auth->login($data->username, $data->password);
 			$_SESSION['access'] = $login ? $login : false;
 			j($login ? array_merge($login, ['loggedIn' => true]) : ['loggedIn' => false]);
-			break;
 
 		case isset($_GET['getCurrent']):
 			j(['user' => $_SESSION['access']]);
-			break;
 
 		case isset($_GET['register']):
 			$username = $data->username;
@@ -96,7 +81,6 @@
 				j(array_merge($register, ['loggedIn' => true, 'username' => $username, 'id' => $register['id']]));
 			}
 			j($register);
-			break;
 		}
 	}
 

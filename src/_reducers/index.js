@@ -4,8 +4,8 @@ import { authentication } from './authentication.reducer'
 import { registration } from './registration.reducer'
 import { peoples } from './peoples.reducer'
 import { _alert } from './alert.reducer'
-import { layoutConfig } from './layoutConfig.reducer'
-import { layoutContent } from './layoutContent.reducer'
+import { gridConfig } from './gridConfig.reducer'
+import { gridContent } from './gridContent.reducer'
 import { editor } from './editor.reducer'
 
 const rootReducer = combineReducers({
@@ -13,8 +13,8 @@ const rootReducer = combineReducers({
   registration,
   peoples,
   _alert,
-  layoutConfig,
-  layoutContent,
+  gridConfig,
+  gridContent,
   editor
 })
 

@@ -1,56 +1,62 @@
 import { editConstants } from '../_constants'
 
-const initState = {
+const initialState = {
+  id: 0,
   value: 0,
-  // id,
-  _name: '',
-  date: '',
   show: false,
-  savingIn: false,
 }
 
-export function editor(state = initState, action) {
-  const { payload } = action
+export function editor(state = initialState, action) {
+  const { payload, type } = action
+  const _state = { ...state }
 
-  switch (action.type) {
-      case editConstants.MODAL_HIDE:
-        return {
-          ...state,
-          show: false
-        }
+  switch (type) {
+    case editConstants.MODAL_HIDE:
+      return initialState
 
-      case editConstants.MODAL_CREATE_ITEM:
-      case editConstants.MODAL_EDIT_ITEM:
-        const { id, data: { name: _name, date, tags, value } } = payload
-        const _tags = tags.map(item => ({
-          value: item.id,
-          label: item.value
-        }))
-        // console.log('--- editConstants.MODAL_EDIT_ITEM', _name, date, _tags, value)
-        return {
-          value,
-          id,
-          _name,
-          date,
-          tags: _tags,
-          show: true
-        }
+    case editConstants.MODAL_CREATE_ITEM:
+      return {
+        ...state,
+        id: payload.id,
+        show: true
+      }
 
-      case editConstants.SAVE_REQUEST:
-        return {
-          ...state,
-          ...payload,
-          savingIn: true
-        }
+    case editConstants.MODAL_EDIT_ITEM:
+      return {
+        ...state,
+        value: payload.value,
+        show: true
+      }
 
-      case editConstants.SAVE_SUCCESS:
-      case editConstants.SAVE_FAILURE:
-        return {
-          ...state,
-          savingIn: false
-        }
+    case editConstants.SAVE_REQUEST:
+      return {
+        ...state,
+        inSaving: true
+      }
 
-      default:
-        return state
+    case editConstants.REMOVE_REQUEST:
+      return {
+        ...state,
+        inRemoving: true
+      }
+
+    case editConstants.SAVE_NEW_SUCCESS:
+      return {
+        ...state,
+        value: payload.people.value
+      }
+
+    case editConstants.SAVE_EDIT_SUCCESS:
+      return state
+
+    case editConstants.SAVE_FAILURE:
+      delete _state.inSaving
+      return _state
+
+    case editConstants.REMOVE_SUCCESS:
+      return initialState
+
+    default:
+      return state
   }
 }

@@ -1,0 +1,6 @@
+export const gridConstants = {
+    ADD_ITEM: 'GRID_ADD_ITEM',
+    REMOVE_ITEM: 'GRID_REMOVE_ITEM',
+    UPDATE_ITEM: 'GRID_UPDATE_ITEM',
+    UPDATE_ALL: 'GRID_UPDATE_ALL_ITEMS'
+}

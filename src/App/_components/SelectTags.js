@@ -28,7 +28,7 @@ class SelectTags extends React.Component {
 
 	render() {
         const { multi, multiValue, options } = this.state
-        console.log('--- SelectTags.render', this.state)
+        // console.log('--- SelectTags.render', this.state)
 
 		return <Creatable
 				multi={multi}
@@ -37,7 +37,7 @@ class SelectTags extends React.Component {
 				value={multiValue}
 				shouldKeyDownEventCreateNewOption={keyCode => keyCode==13}
 				promptTextCreator={label => label}
-				placeholder="Введите новый тег и нажмите Enter"
+				placeholder="Введите новые теги добавляя их нажатием Enter"
 			/>
 	}
 

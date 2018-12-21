@@ -54,14 +54,14 @@ function logout() {
     return fetch(`${urls.logout}`, requestOptions).then(handleResponse)
 }
 
-function getCurrent() {
+function getCurrent(fromPage) {
     const requestOptions = {
         method: 'GET',
         credentials: 'same-origin',
         // headers: authHeader()
     };
 
-    return fetch(`${urls.getCurrent}`, requestOptions)
+    return fetch(`${urls.getCurrent}&${fromPage}`, requestOptions)
         .then(handleResponse)
         .then(user => {
             if(user == null || user == false) {
