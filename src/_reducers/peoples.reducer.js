@@ -48,7 +48,7 @@ export function peoples(state = initialState, action) {
           return initialState
 
       case editConstants.REMOVE_SUCCESS:
-          return {
+          return state.items.length==1 ? initialState : {
             ...state,
             items: state.items
               .filter(item => item.value!=payload.value)

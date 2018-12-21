@@ -90,10 +90,8 @@ function register(user) {
     function failure(error) { return { type: userConstants.REGISTER_FAILURE, payload: { error } } }
 }
 
-// getting user auth info with peoples array (if you logged in)
+// getting user auth info with full peoples array (if you logged in)
 function getCurrent() {
-
-
     return dispatch => {
         userService.getCurrent(fromPage())
             .then(

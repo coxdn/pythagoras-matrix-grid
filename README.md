@@ -1,7 +1,7 @@
 ## Demo
-Live demo can be found here: [http://cvetok.zzz.com.ua/pythagor.html](http://cvetok.zzz.com.ua/pythagor.html)
+Live demo can be found here: [http://cvetok.zzz.com.ua/app.html](http://cvetok.zzz.com.ua/app.html)
 
-<img src="" alt="Demo" />
+<img src="https://image.prntscr.com/image/TaEVrYzOQ4mzI1Y2toOEnA.png" alt="Demo" />
 
 ## git clone
 When cloning a repository for correct behavior ```react-grid-layout``` and ```react-select-search``` you must replace them from the folder ```modified_modules``` to ```node_modules``` after you run the command ```npm install```.

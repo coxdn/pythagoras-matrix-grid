@@ -10,7 +10,8 @@ function addToGrid(date) {
         type: peoplesConstants.ADD_ITEM_TO_GRID,
         payload: { date },
         generateId: true,
-        checkDate: true
+        checkDate: true,
+        getNearestCoords: true
     }
 }
 

@@ -18,7 +18,7 @@ class PeoplesSearchWrapper extends React.Component {
     }
 
     onInputChange = (value, options) => {
-        console.log('--- onInputChange', value, options, this)
+        // console.log('--- onInputChange', value, options, this)
         // const firstValue = options.length ? options[0].value : 0
         this.setState({ search: value, count: options.length })
         this.props.dispatch(alertActions.peoples.clear())
@@ -29,7 +29,7 @@ class PeoplesSearchWrapper extends React.Component {
         // if (ev.toString() == "[object Object]") return
         const { search, count } = this.state
         const char = ev.which || ev.keyCode
-        console.log('--- PeoplesSearch.onInputKeyPress', ev, ev.ctrlKey, char)
+        // console.log('--- PeoplesSearch.onInputKeyPress', ev, ev.ctrlKey, char)
         if (char==13) {
             if (checkInput({search}) && count==0) {
                 this.props.dispatch(peoplesActions.addToGrid(search.trim()))

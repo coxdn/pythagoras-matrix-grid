@@ -57,7 +57,7 @@ class NoCompactingGrid extends React.PureComponent {
       if (empty) {
         innerJSX =
           <div>
-            <div className="inter clear-button btn btn-default btn1" title="Убрать" onClick={this.handleRemove(id)}></div>
+            <div className="control-button btn btn-default btn1" title="Убрать" onClick={this.handleRemove(id)}></div>
             <DateInput onHookRef={this.hookRef} onCalcNew={this.calcNew} />
           </div>
       } else {
@@ -68,11 +68,11 @@ class NoCompactingGrid extends React.PureComponent {
             </button>
         innerJSX = 
           <div>
-            <div className="inter clear-button btn btn-default btn1" title="Убрать" onClick={this.handleRemove(id)} onMouseDown={ev => ev.stopPropagation()}></div>
-            <div className="inter clear-button btn btn-default btn2" title="Изменить" onClick={this.editItem(value)} onMouseDown={ev => ev.stopPropagation()}></div>
+            <div className="control-button btn btn-default btn1" title="Убрать" onClick={this.handleRemove(id)} onMouseDown={ev => ev.stopPropagation()}></div>
+            <div className="control-button btn btn-default btn2" title="Изменить" onClick={this.editItem(value)} onMouseDown={ev => ev.stopPropagation()}></div>
             <div className="matrix-people-name">{saveOrName}</div>
             <div className="intermediate">
-              <div className="inter">{intermediate}</div>
+              <div className="summary">{intermediate}</div>
               <div className="date">{fullDate}</div>
             </div>
             <div className="clear"></div>

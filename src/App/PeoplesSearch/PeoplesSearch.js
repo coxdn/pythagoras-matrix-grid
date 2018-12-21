@@ -19,14 +19,14 @@ class PeoplesSearch extends React.Component {
                     onInputChange={this.props.onInputChange}
                     onInputKeyPress={this.props.onInputKeyPress}
                     autofocus={true}
-                    fuse={{keys: ['name', 'date', 'tagSearch'], location: 0, threshold: 0.34, distance: 100, minMatchCharLength: 1}}
+                    fuse={{keys: ['name', 'date', 'tagSearch'], location: 0, threshold: 0.72, distance: 100, minMatchCharLength: 1}}
                 />
     }
 }
 
 function renderFriend(option) {
     const photo = option.photo ? <img className="avatar" src={option.photo} /> : null
-    const tag = option.tags ? option.tags.map(tag => tag.value).join(', ') : ''
+    const tag = option.tags ? option.tags.map((tag, i) => <span key={i}>{tag.value}</span>) : ''
     return (<span>{photo}<span>{option.name}</span><span>{option.date}</span><span>{tag}</span></span>)
 }
 

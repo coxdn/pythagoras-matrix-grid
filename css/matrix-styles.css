@@ -57,8 +57,7 @@ div.matrix div {
 	flex: auto;
 }
 div.intermediate div.date {float:left;}
-div.intermediate div.inter {float:right;}
-div.intermediate div.clear-button {margin-left: 10px;}
+.intermediate .control-button, .intermediate .summary {margin-left: 10px; float:right;}
 div.clear-button, div.do-save, div.search-result {cursor: pointer;}
 div.do-save {
 	color: #9c9c9c;
@@ -70,19 +69,19 @@ div.do-save {
 	text-align: center;
 }
 
-div.inter.clear-button.btn1:after {
+div.control-button.btn1:after {
     font-family: fontawesome;
     font-size: 14px;
     content: "\F00D";
 }
 
-div.inter.clear-button.btn2:after {
+div.control-button.btn2:after {
     font-family: fontawesome;
     font-size: 12px;
     content: "\F040";
 }
 
-div.clear-button {
+div.control-button {
     /* background-color: #337ab759; */
     /* font-weight: bold; */
 	/* font-family: Tahoma; */
@@ -96,7 +95,7 @@ div.clear-button {
 }
 
 div.btn2 {
-	margin-top: 23px;
+	margin-top: 22px;
     margin-right: -19px;
     padding-left: 3px;
     padding-right: 3px;

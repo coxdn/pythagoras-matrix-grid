@@ -20,20 +20,10 @@ class Database {
 
 
 	function query($query, $link = 'db_link') {
-		// $time_start = explode (' ', microtime());
-		// list($usec, $sec) = explode(" ", microtime());
-
-		
 		$result = mysql_query($query) or $this->error($query, mysql_errno(), mysql_error());
-
-		// if (defined('STORE_DB_TRANSACTIONS') && (STORE_DB_TRANSACTIONS == 'true')) {
-		// 	$result_error = mysql_error();
-		// 	error_log('RESULT ' . $result . ' ' . $result_error . "\n", 3, STORE_PAGE_PARSE_TIME_LOG);
-		// }
 
 		if (!$result) {
 			return mysql_error();
-		  	// tep_db_error($query, mysql_errno(), mysql_error());
 		}
 
 		return $result;
@@ -96,19 +86,16 @@ class Request {
 			LEFT JOIN birthdates b ON b.id=bt.people_id
 			WHERE b.user_id = '$user_id'" . ($people_id ? " AND b.id=" . (int)$people_id : "") . "
 			ORDER BY bt.id ASC";
-		// var_dump($querystring);
 		$sql_query = $this->db->query($querystring);
 		while($row = $this->db->fetch_array($sql_query)) {
 			if(!isset($tags[$row['people_id']])) $tags[$row['people_id']] = [];
 			$tags[$row['people_id']][] = ['id' => $row['id'], 'value' => $row['tag']];
 		}
-		// var_dump($tags['12']);
 
 		$peoples = array_map(function($name) use($tags) {
 			$tags_ = $tags[$name['value']];
 			return array_merge($name, ['tags' => (count($tags_) ? $tags_ : [])]);
 		}, $peoples);
-		// var_dump($tags);
 		return ['peoples' => $peoples];
 	}
 

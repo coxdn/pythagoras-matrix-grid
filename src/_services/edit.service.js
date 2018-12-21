@@ -23,7 +23,7 @@ function save(content) {
 }
 
 function remove({id}) {
-    console.log('--- edit.service id', id)
+    // console.log('--- edit.service id', id)
     const requestOptions = {
         method: 'POST',
         credentials: 'same-origin',

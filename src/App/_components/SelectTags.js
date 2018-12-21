@@ -16,7 +16,7 @@ class SelectTags extends React.Component {
 	// }
 
 	handleOnChange = value => {
-		console.log('--- handleOnChange', value)
+		// console.log('--- handleOnChange', value)
 		this.props.onChangeTags(value)
 		this.setState({ multiValue: value })
 	}

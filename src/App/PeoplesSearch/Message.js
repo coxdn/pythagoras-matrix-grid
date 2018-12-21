@@ -20,8 +20,11 @@ class Message extends React.Component {
 function informInput({search, count}) {
     if (/[^\d\.]/.test(search))
         return false
-    if (count>0 && /\d{1,2}\.\d{1,2}\.\d{4}/.test(search))
-    	return "используйте Ctrl+Enter чтобы рассчитать введенную дату и Enter для рассчета выбранной из списка"
+    if (/\d{1,2}\.\d{1,2}\.\d{4}/.test(search)) {
+    	return count
+    		? "используйте Ctrl+Enter чтобы рассчитать введенную дату и Enter для рассчета выбранной из списка"
+    		: "используйте Enter чтобы рассчитать"
+    }
     return "или введите дату в формате ДД.ММ.ГГГГ и нажмите ввод для добавления ее в качестве новой даты для рассчета и/или сохранения"
 }
 

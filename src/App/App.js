@@ -17,7 +17,6 @@ class App extends React.Component {
 
         const { dispatch } = props
         history.listen((location, action) => {
-            console.log('--- history.listen', location, action)
             // clear alert on location change
             dispatch(alertActions.clearAll())
         })
@@ -25,7 +24,6 @@ class App extends React.Component {
 
     render() {
         const { _alert, dispatch, loggedIn, loaded } = this.props
-        // console.log(' ----- @@@', this.props)
         return (
             <Router history={history}>
                 <div className="jumbotron">

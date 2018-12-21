@@ -8,8 +8,6 @@
 
 	$access = @$_SESSION['access'] != false;
 	
-
-
 	$req = new Request();
 	$auth = new Auth();
 	$data = json_decode($_POST['data']);
@@ -20,15 +18,13 @@
 		$_SESSION['access'] = false;
 		j(['loggedIn' => false]);
 		exit;
-
-
 	}
 
 	if($access) {
 		switch(true) {
 		case isset($_GET["loadlist"]):
 			$loadResult = $req->loadList();
-			j($loadResult);//.'___@@@___';
+			j($loadResult);
 
 		case isset($_GET["login"]):
 			j(array_merge($_SESSION['access'], ['loggedIn' => true]));

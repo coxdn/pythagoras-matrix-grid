@@ -29,31 +29,35 @@ module.exports = {
                     //              "minify": true /*[new UglifyJsPlugin()]*/
                     //          }
                     // }
-                }
+                },
                 // "query": {
                 // }
             },
             {
-                test: /\.css/,
+                test: /\.css$/,
                 use:[
                     { loader: 'style-loader' },
                     { loader: 'css-loader' }
                 ]
+            },
+            {
+                test: /\.(png|jpeg|ttf)$/,
+                use: { loader: 'url-loader', options: { limit: 8192 } } 
             }
         ]
     },
     performance: {
         hints: process.env.NODE_ENV === 'production' ? "warning" : false
     },
-    optimization: {
-    minimizer: [
-      new UglifyJsPlugin({
-        uglifyOptions: {
-          output: {
-            comments: false
-          }
-        }
-      })
-    ]
-    }
+    // optimization: {
+    //     minimizer: [
+    //       new UglifyJsPlugin({
+    //         uglifyOptions: {
+    //           output: {
+    //             comments: false
+    //           }
+    //         }
+    //       })
+    //     ]
+    // }
 }

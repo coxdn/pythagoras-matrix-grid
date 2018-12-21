@@ -17,7 +17,7 @@ export function _alert(state = defaultState, action) {
     case alertConstants.AUTH_SUCCESS:
         return state
           .delete("user")
-          .setIn(["user", "class"], "alert-inform")
+          .setIn(["user", "class"], "alert-success")
           .setIn(["user", "message"], payload.message)
 
     case alertConstants.AUTH_ERROR:
