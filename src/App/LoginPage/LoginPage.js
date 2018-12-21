@@ -27,6 +27,12 @@ class LoginPage extends React.Component {
         }
     }
 
+    demoAutoLogin = ev => {
+        ev.preventDefault()
+        const { dispatch } = this.props
+        dispatch(userActions.login('Demo', 'Demo'))
+    }
+
     componentDidMount() {
         this.props.dispatch(userActions.getCurrent())
     }
@@ -37,7 +43,7 @@ class LoginPage extends React.Component {
         return (
             <div className="col-md-6 col-md-offset-3">
                 <h2>Авторизация</h2>
-                <form name="form" onSubmit={this.handleSubmit}>
+                <form name="form">
                     <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
                         <label htmlFor="username">Имя пользователя</label>
                         <input type="text" className="form-control" name="username" value={username} onChange={this.handleChange} />
@@ -53,7 +59,9 @@ class LoginPage extends React.Component {
                         }
                     </div>
                     <div className="form-group">
-                        <button className="btn btn-primary">Вход</button>
+                        <button className="btn btn-primary" onClick={this.handleSubmit}>Вход</button><span>  </span>
+
+                        <button className="btn btn-primary" onClick={this.demoAutoLogin}>Demo</button>
                         <Link to="/register" className="btn btn-link">Регистрация</Link>
                         {loggingIn &&
                             <img style={{'marginLeft': '5px'}} src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />

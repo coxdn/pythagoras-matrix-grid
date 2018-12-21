@@ -17,7 +17,7 @@ Client:
 * react-router-dom
 * react-grid-layout (slightly modified)
 * react-select-search (slightly modified)
-* react-select-plus (slightly modified)
+* react-select-plus
 * react-modal
 
 Server:
