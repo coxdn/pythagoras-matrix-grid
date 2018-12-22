@@ -2,7 +2,7 @@ import moment from 'moment'
 import 'moment/locale/ru'
 
 export const pythagoras = {
-  calibrateNameWidth: function(name) {
+/*  calibrateNameWidth: function(name) {
       common.initTextWidth()
       for(var i=0; i<name.length; i++) {
         var calibrate = common.setTextWidth(name.substr(0, name.length-i)+'...')
@@ -10,7 +10,7 @@ export const pythagoras = {
         return [name.substr(0, name.length-i), name.substr(0, name.length-i)+'...']
       }
       return ['', '']
-  },
+  },*/
 
   composeDigit: function(digit, count) {
       if(count == 0) return "Нет"
@@ -26,12 +26,21 @@ export const pythagoras = {
   checkDate: function(dateString) {
       if(!dateString) return {error: 'Ошибка данных в dateString'}
       dateString = this.getFullDate(dateString.trim())
-      moment.locale('ru')
+      // moment.locale('ru')
       if(!/^\d{1,2}\.\d{1,2}\.\d{4}$/g.test(dateString))
         return {error: 'Введите дату рождения в формате ДД.ММ.ГГГГ'}
       if(!moment(dateString, "DD.MM.YYYY").isValid())
         return {error: 'Такой даты не существует. Введите корректную дату.'}
       return {error: false, fullDate: dateString}
+  },
+
+  getAge: function(dateString) {
+      moment.locale('ru')
+      var a = moment(dateString, "DD.MM.YYYY")
+      return {
+        digits: moment().diff(a, 'year'),
+        format: moment().from(moment().subtract(moment().diff(a, 'year'), 'year'), true)
+      }
   },
 
   calculate: function(dateString) {
@@ -59,12 +68,17 @@ export const pythagoras = {
       sum4 = Number(String(sum3)[0]) + Number(String(sum3)[1])
       
       let digits = this.counterDigits(dateString + String(sum1) + String(sum2) + String(sum3) + String(sum4))
-      return {digits: digits, fullDate: dateString, intermediate: String(sum1) + "." + String(sum2) + "." + String(sum3) + "." + String(sum4)}
+      return {
+        digits: digits,
+        fullDate: dateString,
+        intermediate: String(sum1) + "." + String(sum2) + "." + String(sum3) + "." + String(sum4),
+        age: this.getAge(dateString)
+      }
   },
   
   counterDigits: function(string) {
       const initAcc = Array.from({length: 9})
-        .reduce((acc, item, i) => {
+        .reduce((acc, skip, i) => {
           acc[i+1] = 0
           return acc
       }, {})

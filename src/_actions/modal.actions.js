@@ -70,7 +70,7 @@ function save({id, value, _name, date, tags: oldTags}) {
     function failure(error) { return { type: editConstants.SAVE_FAILURE, payload: { error } } }
 }
 
-function remove(value) {
+function remove(value, ids) {
     return dispatch => {
         dispatch(request())
 
@@ -92,6 +92,6 @@ function remove(value) {
     }
 
     function request() { return { type: editConstants.REMOVE_REQUEST } }
-    function success(value) { return { type: editConstants.REMOVE_SUCCESS, payload: { value }, getIds: true } }
+    function success(value) { return { type: editConstants.REMOVE_SUCCESS, payload: { value, ids } } }
     function failure(error) { return { type: editConstants.REMOVE_FAILURE, payload: { error } } }
 }

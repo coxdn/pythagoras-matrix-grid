@@ -1,18 +1,31 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import { connect } from 'react-redux'
-import "../../../css/grid-styles.css"
-import "../../../css/info-grid-wrapper-styles.css"
-
-// typeof window !== "undefined" && (window.React = React) // for devtools
+// import { connect } from 'react-redux'
+import "../../../css/grid.css"
+import "../../../css/info-grid-wrapper.css"
 
 class GridInfoWrapper extends React.Component {
-  state = { layout: [] }
-
-  onLayoutChange = layout => {
-    this.setState({ layout: this.props.gridConfig.layout })
+  render() {
+    const { Layout } = this.props
+    return (
+      <div>
+        <Layout />
+      </div>
+    )
   }
+}
 
+export { GridInfoWrapper }
+
+
+// uncomment this class and comment out class above if necessary to show grid debugging information
+/*
+class GridInfoWrapper extends React.Component {
+  state = { layout: [] }
+  
+  componentWillReceiveProps(nextProps) {
+    this.setState({ layout: nextProps.gridConfig.layout })
+  }
+  
   stringifyLayout() {
     return this.props.gridConfig.layout.map(function(l) {
       return (
@@ -22,16 +35,19 @@ class GridInfoWrapper extends React.Component {
       )
     })
   }
+  
 
   render() {
     const { Layout } = this.props
+
+    // display debugging information.
     return (
       <div>
-        {null /*<div className="layoutJSON">
-          Displayed as <code>[x, y, w, h]</code>:
-          <div className="columns">{this.stringifyLayout()}</div>
-        </div>*/}
-        <Layout onLayoutChange={this.onLayoutChange} />
+          <div className="layoutJSON">
+            Displayed as <code>[x, y, w, h]</code>:
+            <div className="columns">{this.stringifyLayout()}</div>
+          </div>
+        <Layout />
       </div>
     )
   }
@@ -41,3 +57,4 @@ const connectedGridInfoWrapper = connect(state => ({
   gridConfig: state.gridConfig
 }))(GridInfoWrapper)
 export {connectedGridInfoWrapper as GridInfoWrapper}
+*/

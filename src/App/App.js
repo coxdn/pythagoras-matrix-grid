@@ -9,6 +9,8 @@ import { HomePage } from './HomePage'
 import { LoginPage } from './LoginPage'
 import { RegisterPage } from './RegisterPage'
 
+// import { hot } from 'react-hot-loader'
+
 import '../../css/bootstrap-modify.css'
 
 class App extends React.Component {
@@ -16,7 +18,7 @@ class App extends React.Component {
         super(props)
 
         const { dispatch } = props
-        history.listen((location, action) => {
+        history.listen((/*location, action*/) => {
             // clear alert on location change
             dispatch(alertActions.clearAll())
         })
@@ -54,4 +56,7 @@ const connectedApp = connect(state => {
         _alert
     }
 })(App)
-export { connectedApp as App }
+
+// export { connectedApp as App }
+export default connectedApp
+// export default hot(module)(connectedApp)

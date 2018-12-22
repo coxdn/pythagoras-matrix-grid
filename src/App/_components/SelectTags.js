@@ -2,7 +2,7 @@ import React from 'react'
 // import { connect } from 'react-redux'
 import { Creatable } from 'react-select-plus'
 
-import '../../../node_modules/react-select-plus/dist/react-select-plus.css'
+import 'react-select-plus/dist/react-select-plus.css'
 import '../../../css/select-plus.css'
 
 class SelectTags extends React.Component {

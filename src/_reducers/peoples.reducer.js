@@ -1,45 +1,31 @@
 import { userConstants, editConstants, peoplesConstants } from '../_constants'
+import { reSetPeoplesAttributes, setPeoplesAges, searchPeopleIndex } from '../_helpers'
 
-const initialState = {
-  search: '',
-  items: [
+const initialState = [
     { name: 'Здесь пока никого нет...', value: '' }
   ]
-}
 
 export function peoples(state = initialState, action) {
   const { payload } = action
 
-  let peoples
   switch (action.type) {
+      case peoplesConstants.GETALL_REQUEST:
+          return [ { name: 'Загрузка...', value: '' } ]
+
       case peoplesConstants.GETALL_SUCCESS:
           if(!payload.peoples || !payload.peoples.length) return initialState
-          peoples = payload.peoples.map((item, index) => {
-            item.index = index
-            item.tagSearch = item.tags.map(tag => tag.value).join(', ')
-            return item
-          })
-          return {
-            items: peoples
-          }
+          return reSetPeoplesAttributes(setPeoplesAges(payload.peoples))
 
       case editConstants.SAVE_EDIT_SUCCESS:
-          // const { people } = payload
-          const tmpPeople_i = state.items
-            .map((item, i) => ({value: item.value, i}))
-            .filter(item => item.value==payload.people.value)[0].i
-          peoples = state.items.slice()
-          peoples[tmpPeople_i] = payload.people
-          return {
-            items: peoples
-          }
+          const items = state.slice()
+          const index = searchPeopleIndex(items, payload.people.value)
+          items[index] = { ...payload.people }
+          return reSetPeoplesAttributes(items)
 
       case editConstants.SAVE_NEW_SUCCESS:
-          return {
-            items: state.items
-              .filter(item => item.value)
-              .concat({...payload.people, index: state.items.length})
-          }
+          return reSetPeoplesAttributes(state.concat({
+                ...payload.people
+              }))
 
       case userConstants.GETALL_FAILURE:
           return initialState
@@ -48,12 +34,9 @@ export function peoples(state = initialState, action) {
           return initialState
 
       case editConstants.REMOVE_SUCCESS:
-          return state.items.length==1 ? initialState : {
-            ...state,
-            items: state.items
-              .filter(item => item.value!=payload.value)
-              .map((item, index) => ({...item, index}))
-          }
+          return state.items.length==1
+              ? initialState
+              : reSetPeoplesAttributes(state.filter(people => people.value != payload.value))
 
       default:
         return state

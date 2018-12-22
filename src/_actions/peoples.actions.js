@@ -1,18 +1,7 @@
 import { peoplesConstants } from '../_constants'
 
 export const peoplesActions = {
-	addToGrid,
     remove
-}
-
-function addToGrid(date) {
-    return {
-        type: peoplesConstants.ADD_ITEM_TO_GRID,
-        payload: { date },
-        generateId: true,
-        checkDate: true,
-        getNearestCoords: true
-    }
 }
 
 function remove(value) {

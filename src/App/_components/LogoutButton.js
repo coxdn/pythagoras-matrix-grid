@@ -7,21 +7,19 @@ class LogoutButton extends React.Component {
 	render() {
 		return (
 			<div className="logout">
-	            <p>
-	                <Link to="/login" onClick={this.handleLogout}>
-			          <button type="button" className="btn btn-primary btn-sm">
-			            <span className="glyphicon glyphicon-off" aria-hidden="true"></span> Выйти
-			          </button>
-			        </Link>
-	            </p>
-	        </div>
+				<p>
+					<Link to="/login" onClick={this.props.userLogout}>
+						<button type="button" className="btn btn-primary btn-sm">
+							<span className="glyphicon glyphicon-off" aria-hidden="true"></span> Выйти
+						</button>
+					</Link>
+				</p>
+			</div>
 		)
-	}
-
-	handleLogout = () => {
-		this.props.dispatch(userActions.logout())
 	}
 }
 
-const connectedLogoutButton = connect()(LogoutButton)
+const connectedLogoutButton = connect(null, {
+	userLogout: userActions.logout
+})(LogoutButton)
 export { connectedLogoutButton as LogoutButton }

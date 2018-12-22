@@ -3,7 +3,7 @@ import ReactModal from 'react-modal'
 import { connect } from 'react-redux'
 import { SelectTags } from '../_components'
 import { modalActions } from '../../_actions'
-import { editPeopleSelector } from '../../_selectors'
+import { editPeopleSelector, getIdsByValue } from '../../_selectors'
 
 import '../../../css/modal.css'
 
@@ -12,7 +12,6 @@ class ModalEdit extends React.Component {
       _name: '',
       date: '',
       tags: [],
-      submitted: false,
       edited: false
   }
   
@@ -24,9 +23,8 @@ class ModalEdit extends React.Component {
   onChangeTags = tags => this.setState({ tags, edited: true })
 
   handleCloseModal = () => {
-    const { modalHide } = this.props
     this.props.dispatch(modalActions.hide())
-    this.setState({edited: false, submitted: false})
+    this.setState({ edited: false })
   }
 
   savePeople = () => {
@@ -34,11 +32,11 @@ class ModalEdit extends React.Component {
     const { _name, date, tags } = this.state
     const { id } = this.props.editor
     const { value } = this.props.people
-    this.setState({ edited: false, submitted: true })
+    this.setState({ edited: false })
     this.props.dispatch(modalActions.save({ id, value, _name, date, tags }))
   }
 
-  removePeople = () => this.props.dispatch(modalActions.remove(this.props.editor.value))
+  removePeople = () => this.props.dispatch(modalActions.remove(this.props.editor.value, this.props.ids))
 
   componentDidMount() {
     // console.log('--- ModalEdit.componentDidMount', this.props)
@@ -47,7 +45,7 @@ class ModalEdit extends React.Component {
   }
 
   render () {
-    const { _name, date, tags, submitted, edited } = this.state
+    const { _name, date, tags, edited } = this.state
     const { _alert, people: { value }, editor: { inSaving, inRemoving }} = this.props
     const saveIsActive = !(!edited || (!_name && value) || (!_name && edited) || !date)
     // console.log('--- ModalEdit inSaving', inSaving, '; value=', value, this.state)
@@ -102,9 +100,13 @@ class ModalEdit extends React.Component {
 
 function mapStateToProps(state) {
     const { editor, _alert } = state
+    const people = editPeopleSelector(state)
+    const ids = getIdsByValue(state, people.value)
+
     return {
-        people: editPeopleSelector(state),
+        people,
         editor,
+        ids,
         _alert
     }
 }

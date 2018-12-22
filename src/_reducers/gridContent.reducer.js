@@ -1,22 +1,22 @@
 import { gridConstants, editConstants, userConstants, peoplesConstants } from '../_constants';
 
 export const gridContent = (state = {}, action) => {
-    const { type, payload, randomId } = action
+    const { type, payload } = action
 
     switch (type) {
         case gridConstants.ADD_ITEM:
             const { value, empty } = payload
-        	return {
-        		...state,
-        		[randomId]: value ? { value } : { empty }
-        	}
+            return {
+                ...state,
+                [payload.randomId]: value ? { value } : { empty }
+            }
 
-		case gridConstants.REMOVE_ITEM:
-			const {...tmpContent} = {...state}
-			delete tmpContent[payload.id]
-			return {
-				...tmpContent
-			}
+        case gridConstants.REMOVE_ITEM:
+            const {...tmpContent} = {...state}
+            delete tmpContent[payload.id]
+            return {
+                ...tmpContent
+            }
 
         case gridConstants.UPDATE_ITEM:
             if(payload.error) return state
@@ -32,7 +32,7 @@ export const gridContent = (state = {}, action) => {
             var { date } = payload
             return {
                 ...state,
-                [randomId]: {date}
+                [payload.randomId]: {date}
             }
 
         case editConstants.SAVE_NEW_SUCCESS:
@@ -46,7 +46,7 @@ export const gridContent = (state = {}, action) => {
 
         case editConstants.REMOVE_SUCCESS:
             return Object.keys(state)
-                .filter(item => action.ids.indexOf(item)===-1)
+                .filter(item => payload.ids.indexOf(item) === -1)
                 // .filter(item => state[item].value!=payload.value)
                 .reduce((acc, item) => {
                     acc[item] = {...state[item]}

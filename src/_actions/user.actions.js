@@ -7,8 +7,8 @@ export const userActions = {
     login,
     logout,
     register,
-    getCurrent,
-    delete: _delete
+    getCurrent
+    // delete: _delete
 };
 
 function login(username, password) {
@@ -45,10 +45,9 @@ function logout() {
 }
 
 function register(user) {
-    let v = new Map();
     return dispatch => {
         dispatch(request(user))
-        // console.log('--- user', user)
+        
         userService.register(user)
             .then(
                 response => {
@@ -93,6 +92,8 @@ function register(user) {
 // getting user auth info with full peoples array (if you logged in)
 function getCurrent() {
     return dispatch => {
+        dispatch(request())
+
         userService.getCurrent(fromPage())
             .then(
                 data => {
@@ -117,12 +118,13 @@ function getCurrent() {
         return ''
     }
 
-    function success(data) { return { type: peoplesConstants.GETALL_SUCCESS, payload: { ...data } } }
+    function request() { return { type: peoplesConstants.GETALL_REQUEST } }
+    function success(data) { return { type: peoplesConstants.GETALL_SUCCESS, payload: { ...data }, getAges: true } }
     function failure(error) { return { type: peoplesConstants.GETALL_FAILURE, payload: { error } } }
     function loginFailure() { return { type: userConstants.LOGIN_FAILURE } }
 }
 
-function _delete(id) {
+/*function _delete(id) {
     return dispatch => {
         dispatch(request(id))
 
@@ -140,4 +142,4 @@ function _delete(id) {
     function request(id) { return { type: userConstants.DELETE_REQUEST, payload: { id } } }
     function success(id) { return { type: userConstants.DELETE_SUCCESS, payload: { id } } }
     function failure(id, error) { return { type: userConstants.DELETE_FAILURE, payload: { id, error } } }
-}
+}*/

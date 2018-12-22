@@ -159,7 +159,7 @@ function resolveCompactionCollision(layout, item, moveToCoord, axis) {
   var sizeProp = heightWidth[axis];
   item[axis] += 1;
   var itemIndex = layout
-    .map(layoutItem => {
+    .map(function(layoutItem) {
       return layoutItem.i;
     })
     .indexOf(item.i);

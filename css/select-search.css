@@ -1,3 +1,7 @@
+.select-search-box {
+    width: 545px !important;
+    margin-left: 10px;
+}
 .avatar {
 	width: 40px;
 	height: 40px;
@@ -21,9 +25,10 @@
 }
 
 .select-inform {
-	position: absolute;
+    position: absolute;
     z-index: 1;
     top: 15px;
-    left: 630px;
-    width: 150px;
+    left: 580px;
+    width: 173px;
+    text-align: justify;
 }

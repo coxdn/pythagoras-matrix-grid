@@ -8,8 +8,8 @@ export default store => next => action => {
     const checkDate = pythagoras.checkDate(date)
 
     next({
-    	...action,
-    	payload: {
+        ...action,
+        payload: {
             ...payload,
             error: checkDate.error,
             date: checkDate.error ? date : checkDate.fullDate

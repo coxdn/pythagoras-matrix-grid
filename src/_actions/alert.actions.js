@@ -16,11 +16,11 @@ export {actions as alertActions}
 
 function modal() {
 	return {
-	    error
+		error
 	}
 
 	function error(message) {
-	    return { type: alertConstants.MODAL_ERROR, payload: { message } }
+		return { type: alertConstants.MODAL_ERROR, payload: { message } }
 	}
 }
 
@@ -31,24 +31,24 @@ function grid() {
 	}
 
 	function error(message) {
-    	return { type: alertConstants.GRID_CREATE_ITEM_ERROR, payload: { message } }
+		return { type: alertConstants.GRID_CREATE_ITEM_ERROR, payload: { message } }
 	}
 }
 
 
 function user() {
 	return {
-	    success,
-	    errorAuth,
-	    errorRegister
+		success,
+		errorAuth,
+		errorRegister
 	}
 
 	function success(message) {
-	    return { type: alertConstants.AUTH_SUCCESS, payload: { message } }
+		return { type: alertConstants.AUTH_SUCCESS, payload: { message } }
 	}
 
 	function errorAuth(message) {
-	    return { type: alertConstants.AUTH_ERROR, payload: { message } }
+		return { type: alertConstants.AUTH_ERROR, payload: { message } }
 	}
 
 	function errorRegister(message) {
@@ -63,7 +63,7 @@ function peoples() {
 	}
 
 	function error(message) {
-    	return { type: alertConstants.PEOPLES_CREATE_ITEM_GRID_ERROR, payload: { message } }
+		return { type: alertConstants.PEOPLES_CREATE_ITEM_GRID_ERROR, payload: { message } }
 	}
 
 	function clear() {
@@ -73,7 +73,7 @@ function peoples() {
 
 
 function clearAll() {
-    return { type: alertConstants.CLEAR_ALL_ERROR }
+	return { type: alertConstants.CLEAR_ALL_ERROR }
 }
 
 

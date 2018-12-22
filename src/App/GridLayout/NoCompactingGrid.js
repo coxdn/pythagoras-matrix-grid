@@ -1,59 +1,50 @@
 import React from "react"
-// import _ from "lodash"
 import RGL, { WidthProvider } from "react-grid-layout"
 import { connect } from 'react-redux'
 import { DateInput } from '../_components'
 import { ModalEdit } from "../ModalEdit"
-import { gridActions, alertLayoutActions, modalActions } from '../../_actions'
+import { gridActions, modalActions } from '../../_actions'
 import { gridPeopleSelector, getCreationId } from '../../_selectors'
 
-import "../../../css/matrix-styles.css"
+import "../../../css/matrix.css"
 
 const ReactGridLayout = WidthProvider(RGL)
 
 class NoCompactingGrid extends React.PureComponent {
-  handleRemove = id => () => {this.props.dispatch(gridActions.remove(id))}
+  handleRemove = (id) => () => this.props.gridRemove(id)
   
-  editItem = value => () => this.props.dispatch(modalActions.showEditing(value))
-  createNew = id => () => this.props.dispatch(modalActions.showCreating(id))
+  editItem = (value) => () => this.props.modalShowEditing(value)
+  createNew = (id) => () => this.props.modalShowCreating(id)
 
-  calcNew = date => {
-    const { creationID, dispatch } = this.props
-    dispatch(gridActions.calcNew(creationID, date))
+  calcNew = (date) => {
+    const { creationID, gridCalcNew } = this.props
+    gridCalcNew(creationID, date)
   }
 
-  hookRef = node => {this.inputNode = node}
+  hookRef = (node) => {this.inputNode = node}
 
-  handleItemClick = ev => {
+  handleItemClick = (ev) => {
     ev.stopPropagation()
-    // console.log('--- this in handleItemClick', this, this.inputNode)
     if(this.inputNode)
     this.inputNode.focus()
   }
 
+  createEmpty = () => {
+    const { gridRemove, gridAddEmpty } = this.props
 
-  onLayoutChange = layout => {
-    this.props.dispatch(gridActions.updateAll(layout))
-    // console.log('--- onLayoutChange in NoCompactingGrid', layout)
-    this.props.onLayoutChange(layout)
-    // console.log('--- this in onLayoutChange', this)
-  }
-
-  createEmpty = ev => {
-    const { dispatch } = this.props
     if(this.inputNode) {
       const { creationID } = this.props
-      dispatch(gridActions.remove(creationID))
+      gridRemove(creationID)
     } else {
-      dispatch(gridActions.addEmpty('В формате ДД.ММ.ГГГГ'))
+      gridAddEmpty('В формате ДД.ММ.ГГГГ')
     }
   }
 
 
-  generateDOM = content => {
+  generateDOM = (content) => {
     return content.map((item) => {
       let innerJSX
-      const {id, value, digits, fullDate, intermediate, name, empty} = item
+      const {id, value, digits, fullDate, intermediate, name, empty, age} = item
       if (empty) {
         innerJSX =
           <div>
@@ -61,7 +52,7 @@ class NoCompactingGrid extends React.PureComponent {
             <DateInput onHookRef={this.hookRef} onCalcNew={this.calcNew} />
           </div>
       } else {
-        const cd = x => content.composeDigit(x, digits[x]) // shortest name
+        const cd = (x) => content.composeDigit(x, digits[x]) // shortest name
         const saveOrName = name ? name : 
             <button type="button" className="btn btn-default btn-sm" onClick={this.createNew(id)}>
               <span className="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Сохранить
@@ -69,11 +60,11 @@ class NoCompactingGrid extends React.PureComponent {
         innerJSX = 
           <div>
             <div className="control-button btn btn-default btn1" title="Убрать" onClick={this.handleRemove(id)} onMouseDown={ev => ev.stopPropagation()}></div>
-            <div className="control-button btn btn-default btn2" title="Изменить" onClick={this.editItem(value)} onMouseDown={ev => ev.stopPropagation()}></div>
+            {value ? <div className="control-button btn btn-default btn2" title="Изменить" onClick={this.editItem(value)} onMouseDown={ev => ev.stopPropagation()}></div> : null}
             <div className="matrix-people-name">{saveOrName}</div>
             <div className="intermediate">
               <div className="summary">{intermediate}</div>
-              <div className="date">{fullDate}</div>
+              <div className="date">{fullDate}{age.digits && age.digits<135 ? ' ('+age.format+')' : ''}</div>
             </div>
             <div className="clear"></div>
             <div className="matrix">
@@ -94,12 +85,13 @@ class NoCompactingGrid extends React.PureComponent {
 
 
   componentDidUpdate(prevProps) {
-    // console.log('---- componentDidUpdate', prevProps, this.props, this.inputNode)
-    const emptyCount = (props) => !props ? 0 : Object.values(props).filter(item => item && item.empty).length
-    const currEmptyCount = emptyCount(this.props.content)
-    const prevEmptyCount = emptyCount(prevProps.content)
-    if(prevEmptyCount<currEmptyCount && this.inputNode)
-    this.inputNode.focus() // focus on input field only if it field just been created
+    // function returns the number of empty grid tiles (tile for new date)
+    const emptyNumber = (props) => !props ? 0 : Object.keys(props).filter(key => props[key] && props[key].empty).length
+    const currEmptyNumber = emptyNumber(this.props.content)
+    const prevEmptyNumber = emptyNumber(prevProps.content)
+    // focus on input field only if it field just been created
+    if(prevEmptyNumber < currEmptyNumber && this.inputNode)
+      this.inputNode.focus()
   }
 
   render() {
@@ -107,15 +99,19 @@ class NoCompactingGrid extends React.PureComponent {
     
     return (
       <div>
-        <div className='grid-layout-wrapper' onClick={this.createEmpty}>
+        <div className="grid-layout-wrapper" onClick={this.createEmpty}>
           <ReactGridLayout
             layout={layout}
             {...config}
-            onLayoutChange={this.onLayoutChange}
+            onLayoutChange={this.props.gridUpdateAll}
             >
-            {this.generateDOM(content)}
+            { this.generateDOM(content) }
           </ReactGridLayout>
-          {!creationId ? <div className='text-on-grid'>Нажмите здесь чтобы добавить новый рассчет</div> : null}
+          {
+            !creationId
+              ? <div className="text-on-grid">Нажмите здесь чтобы добавить новый рассчет</div>
+              : null
+          }
         </div>
         {editor.show ? <ModalEdit /> : null}
       </div>
@@ -124,12 +120,11 @@ class NoCompactingGrid extends React.PureComponent {
 }
 
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { gridConfig: config, alert, editor } = state
   const { layout } = config
   const creationId = getCreationId(state)
   const content = gridPeopleSelector(state)
-  // debugger
   return {
     layout,
     config,
@@ -140,5 +135,14 @@ const mapStateToProps = state => {
   }
 }
 
-const connectedNoCompactingGrid = connect(mapStateToProps)(NoCompactingGrid)
+const mapDispatchToProps = {
+  modalShowEditing: modalActions.showEditing,
+  modalShowCreating: modalActions.showCreating,
+  gridRemove: gridActions.remove,
+  gridCalcNew: gridActions.calcNew,
+  gridUpdateAll: gridActions.updateAll,
+  gridAddEmpty: gridActions.addEmpty
+}
+
+const connectedNoCompactingGrid = connect(mapStateToProps, mapDispatchToProps)(NoCompactingGrid)
 export {connectedNoCompactingGrid as NoCompactingGrid}

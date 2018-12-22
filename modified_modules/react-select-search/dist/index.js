@@ -74,7 +74,6 @@ function (_React$Component) {
       });
     }), "onFocus", function () {
       _this.props.onInputChange('', _this.state.defaultOptions)
-      // console.log('--- onFocus')
       _this.setState({
         focus: true,
         options: _this.state.defaultOptions,
@@ -86,16 +85,14 @@ function (_React$Component) {
       if (!value) {
         value = '';
       }
-      // console.log('--- value', value)
+
       var options = _this.state.defaultOptions;
       options = _this.getNewOptionsList(options, value);
       _this.props.onInputChange(value, options)
-      // console.log('--- onChange in module', value, options)
-      _this.setState({}, () => { // <- bullshit... but it works
-        _this.setState({
-          search: value,
-          options: options
-        });
+
+      _this.setState({
+        search: value,
+        options: options
       });
     }), "onKeyPress", function (e) {
       // console.log('--- _this.props.onInputKeyPress(e)', e)
@@ -111,7 +108,7 @@ function (_React$Component) {
       }
       /** Enter */
       // if (e.key=="Enter") return
-      console.log('--- _this.props.onInputKeyPress(e) 222', e)
+      // console.log('--- _this.props.onInputKeyPress(e) 222', e)
 
       if (e.keyCode === 13) {
         _this.handleEnter();
@@ -146,7 +143,6 @@ function (_React$Component) {
         _this.handleEsc();
       }
     }), "toggle", function () {
-        console.log('--- toggle')
       if (_this.state.focus) {
         _this.onBlur();
       } else {
@@ -506,8 +502,8 @@ function (_React$Component) {
         var fuse = new _fuse.default(options, this.props.fuse);
         // console.log('--- no normal run getNewOptionsList', value, fuse.search(value));
         this.setState({ highlighted: 0 });
-        return fuse.search(value).map((item, index) => {
-          return {...item, index};
+        return fuse.search(value).map(function(item, index) {
+          return Object.assign({}, item, {index: index});
         });
       }
       return options;
@@ -721,9 +717,8 @@ function (_React$Component) {
     key: "renderSearchField",
     value: function renderSearchField() {
       var searchField = null;
-
       if (this.props.search) {
-        var name = null;
+        var name = this.props.name; //null;
         searchField = _react.default.createElement("input", {
           name: name,
           ref: this.search,

@@ -1,5 +1,5 @@
 import { Map, Record } from 'immutable'
-import { alertConstants, gridConstants, peoplesConstants, userConstants, editConstants } from '../_constants'
+import { alertConstants, gridConstants, userConstants, editConstants } from '../_constants'
 
 const AlertState = Record({
   user: new Map({}),

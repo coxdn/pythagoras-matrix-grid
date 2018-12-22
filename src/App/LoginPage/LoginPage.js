@@ -29,6 +29,7 @@ class LoginPage extends React.Component {
 
     demoAutoLogin = ev => {
         ev.preventDefault()
+
         const { dispatch } = this.props
         dispatch(userActions.login('Demo', 'Demo'))
     }
@@ -61,7 +62,7 @@ class LoginPage extends React.Component {
                     <div className="form-group">
                         <button className="btn btn-primary" onClick={this.handleSubmit}>Вход</button><span>  </span>
 
-                        <button className="btn btn-primary" onClick={this.demoAutoLogin}>Demo</button>
+                        <button className="btn btn-primary" onClick={this.demoAutoLogin} style={{'marginLeft': '10px'}}>Demo</button>
                         <Link to="/register" className="btn btn-link">Регистрация</Link>
                         {loggingIn &&
                             <img style={{'marginLeft': '5px'}} src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
@@ -69,7 +70,7 @@ class LoginPage extends React.Component {
                     </div>
                 </form>
             </div>
-        );
+        )
     }
 }
 

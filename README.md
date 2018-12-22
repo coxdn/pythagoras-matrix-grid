@@ -1,5 +1,5 @@
 ## Demo
-Live demo can be found here: [http://cvetok.zzz.com.ua/app.html](http://cvetok.zzz.com.ua/app.html)
+Live demo can be found here: [http://cvetok.zzz.com.ua/login](http://cvetok.zzz.com.ua/login)
 
 <img src="https://image.prntscr.com/image/TaEVrYzOQ4mzI1Y2toOEnA.png" alt="Demo" />
 
@@ -15,6 +15,8 @@ Client:
 
 * react / redux / thunk
 * react-router-dom
+* reselect
+* immutable
 * react-grid-layout (slightly modified)
 * react-select-search (slightly modified)
 * react-select-plus

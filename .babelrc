@@ -1,11 +1,16 @@
 {
     "presets": [
-        "@babel/preset-env",
-        "@babel/preset-react"
+        "@babel/preset-react",
+        [
+        	"@babel/preset-env",
+        	{
+        		"modules": false,
+        		"forceAllTransforms": true
+        	}
+        ]
     ],
     "plugins": [
-        [
-          "@babel/plugin-proposal-class-properties"
-        ]
+        "@babel/plugin-proposal-class-properties",
+        "react-hot-loader/babel"
     ]
 }

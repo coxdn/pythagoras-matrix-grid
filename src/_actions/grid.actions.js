@@ -1,19 +1,33 @@
-import { gridConstants } from '../_constants'
+import { gridConstants, peoplesConstants } from '../_constants'
 
 export const gridActions = {
-	addSelected,
+	addByClick,
+    addByKeyPress,
     addEmpty,
     calcNew,
-    // update,
     remove,
     updateAll
 }
 
-function addSelected(value) {
+function addByClick(value) {
     return {
         type: gridConstants.ADD_ITEM,
-        payload: { value },
-        generateId: true,
+        payload: {
+            randomId: Math.random().toString(),
+            value
+        },
+        getNearestCoords: true
+    }
+}
+
+function addByKeyPress(date) {
+    return {
+        type: peoplesConstants.ADD_ITEM_TO_GRID,
+        payload: {
+            randomId: Math.random().toString(),
+            date
+        },
+        checkDate: true,
         getNearestCoords: true
     }
 }
@@ -21,8 +35,11 @@ function addSelected(value) {
 function addEmpty(message) {
     return {
         type: gridConstants.ADD_ITEM,
-        payload: { empty: true, message },
-        generateId: true,
+        payload: {
+            empty: true,
+            randomId: Math.random().toString(),
+            message,
+        },
         getNearestCoords: true
     }
 }
@@ -34,13 +51,6 @@ function calcNew(id, date) {
         checkDate: true
     }
 }
-
-/*function update(id, content) {
-    return {
-        type: gridConstants.UPDATE_ITEM,
-        payload: {id, content}
-    }
-}*/
 
 function remove(id) {
     return {

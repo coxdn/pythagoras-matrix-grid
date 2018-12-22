@@ -31,7 +31,8 @@ ul.canvas li { margin: 5px; padding: 5px; font-size: 14px; width: 180px; }
 }
 
 div.matrix-people-name {
-	width: 100%;
+	/* width: 100%; */
+	width: 150px;
 	font-size: 12px;
 	display: block;
 	height: 43px;
@@ -57,7 +58,7 @@ div.matrix div {
 	flex: auto;
 }
 div.intermediate div.date {float:left;}
-.intermediate .control-button, .intermediate .summary {margin-left: 10px; float:right;}
+.intermediate .summary {margin-left: 2px; float:right;}
 div.clear-button, div.do-save, div.search-result {cursor: pointer;}
 div.do-save {
 	color: #9c9c9c;
@@ -85,20 +86,23 @@ div.control-button {
     /* background-color: #337ab759; */
     /* font-weight: bold; */
 	/* font-family: Tahoma; */
-    padding: 0px 3px 1px 3px;
+    padding: 0px 3px 1px 2px;
     font-size: 14px;
     border-radius: 3px;
     margin-top: 2px;
-    margin-right: 4px;
+    margin-right: 3px;
     line-height: normal;
     float: right;
 }
 
-div.btn2 {
+div.control-button {
+    right: 0px;
+    position: absolute;
+}
+
+div.control-button.btn2 {
 	margin-top: 22px;
-    margin-right: -19px;
-    padding-left: 4px;
-    padding-right: 3px;
+	padding-left: 3px;
 }
 
 div#textWidth {
