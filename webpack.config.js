@@ -85,7 +85,9 @@ module.exports = {
         //       // Create index.html file
         //       cache: production,
         // }),
-        new webpack.NamedModulesPlugin()
+        new webpack.NamedModulesPlugin(),
+        // new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /[^r][^u]/),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         // new webpack.HotModuleReplacementPlugin()
     ],
     resolve: {

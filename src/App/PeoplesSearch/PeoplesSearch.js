@@ -5,6 +5,7 @@ import '../../../css/select-search.css'
 
 class PeoplesSearch extends React.Component {
     render() {
+        console.log('--- PeoplesSearch render')
 		return <SelectSearch
                     name="peoples"
                     multiple={true}
