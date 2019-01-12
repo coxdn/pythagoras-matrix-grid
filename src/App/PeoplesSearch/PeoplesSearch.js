@@ -3,7 +3,7 @@ import SelectSearch from 'react-select-search'
 
 import '../../../css/select-search.css'
 
-class PeoplesSearch extends React.Component {
+class PeoplesSearch extends React.PureComponent {
     render() {
 		return <SelectSearch
                     name="peoples"

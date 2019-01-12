@@ -101,7 +101,7 @@ class ModalEdit extends React.Component {
 function mapStateToProps(state) {
     const { editor, _alert } = state
     const people = editPeopleSelector(state)
-    const ids = getIdsByValue(state, people.value)
+    const ids = getIdsByValue(people.value)(state)
 
     return {
         people,

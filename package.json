@@ -48,6 +48,6 @@
     "start": "npm run dev",
     "api": "",
     "dev": "webpack-dev-server --hot --colors",
-    "build": "cross-env NODE_ENV=production webpack"
+    "build": "cross-env NODE_ENV=production webpack -p"
   }
 }
