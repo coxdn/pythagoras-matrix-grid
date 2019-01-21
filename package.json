@@ -29,7 +29,8 @@
     "babel-loader": "^8.0.4",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.1",
-    "style-loader": "^0.23.1",
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.7.1",
     "eslint": "^5.11.1",
     "eslint-loader": "^2.1.1",
     "eslint-plugin-react": "^7.11.1",
@@ -38,6 +39,7 @@
     "react-grid-layout": "^0.16.6",
     "react-hot-loader": "^4.6.3",
     "react-scripts": "^1.0.0",
+    "style-loader": "^0.23.1",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",
@@ -48,6 +50,7 @@
     "start": "npm run dev",
     "api": "",
     "dev": "webpack-dev-server --hot --colors",
+    "test": "react-scripts test --env=jsdom",
     "build": "cross-env NODE_ENV=production webpack -p"
   }
 }
