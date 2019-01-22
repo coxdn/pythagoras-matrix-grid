@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "author": "Alex <cxdname@gmail.com>",
   "dependencies": {
-    "babel-eslint": "^10.0.1",
     "history": "4.7.2",
     "immutable": "^4.0.0-rc.12",
     "moment": "^2.22.2",
@@ -26,6 +25,8 @@
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/preset-env": "^7.1.6",
     "@babel/preset-react": "^7.0.0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.4",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.1",
@@ -34,11 +35,15 @@
     "eslint": "^5.11.1",
     "eslint-loader": "^2.1.1",
     "eslint-plugin-react": "^7.11.1",
+    "expect": "^23.6.0",
     "extract-text-webpack-plugin": "^3.0.2",
+    "fetch-mock": "^7.3.0",
     "html-webpack-plugin": "^3.2.0",
+    "jest": "^23.6.0",
     "react-grid-layout": "^0.16.6",
     "react-hot-loader": "^4.6.3",
     "react-scripts": "^1.0.0",
+    "redux-mock-store": "^1.5.3",
     "style-loader": "^0.23.1",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "webpack": "^4.25.1",
@@ -50,7 +55,8 @@
     "start": "npm run dev",
     "api": "",
     "dev": "webpack-dev-server --hot --colors",
-    "test": "react-scripts test --env=jsdom",
+    "test": "jest",
+    "test:watch": "npm test -- --watch",
     "build": "cross-env NODE_ENV=production webpack -p"
   }
 }
