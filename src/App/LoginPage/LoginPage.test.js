@@ -1,23 +1,25 @@
 import React from 'react'
-// import Enzyme, { mount, render, shallow } from 'enzyme'
-// import Adapter from 'enzyme-adapter-react-16'
-import ReactTestUtils from 'react-dom/test-utils'
-// import addons from 'react/addons' 
+import Enzyme, { mount } from 'enzyme'
 import { LoginPage } from './LoginPage'
 import { Provider } from 'react-redux'
 import { store } from '../../_helpers'
-import expect from 'expect'
+// import expect from 'expect'
 // import articles from '../fixtures'
-
-// Enzyme.configure({ adapter: new Adapter() })
+import Adapter from 'enzyme-adapter-react-16'
+Enzyme.configure({ adapter: new Adapter() })
 // const TestUtils = React.addons.TestUtils;
 
 describe('LoginPage component tests', () => {
-  const component = ReactTestUtils.renderIntoDocument(
-    <Provider store={store}>
-      <LoginPage loginIn={true}/>
-    </Provider>
-  )
+  // const component = ReactTestUtils.renderIntoDocument(
+  //   <Provider store={store}>
+  //     <LoginPage loginIn={true}/>
+  //   </Provider>
+  // )
+  const component = mount(
+      <Provider store={store}>
+        <LoginPage />
+      </Provider>
+      )
 
   // test('login page must have auth form', () => {
   //   ReactTestUtils.findRenderedDOMComponentWithTag(component, 'form')
