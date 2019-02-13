@@ -1,13 +1,12 @@
 import React from 'react'
 import SelectSearch from 'react-select-search'
-
 import '../../../css/select-search.css'
 
 class PeoplesSearch extends React.PureComponent {
     render() {
 		return <SelectSearch
                     name="peoples"
-                    multiple={true}
+                    multiple
                     height={280}
                     options={this.props.peoples}
                     placeholder="Поиск..."
@@ -15,7 +14,7 @@ class PeoplesSearch extends React.PureComponent {
                     onChange={this.props.handleSelected}
                     onInputChange={this.props.onInputChange} // added function in module for the interception
                     onInputKeyPress={this.props.onInputKeyPress} // added function in module for the interception
-                    autofocus={true}
+                    autofocus
                     fuse={{
                         shouldSort: true,
 

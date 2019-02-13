@@ -3,8 +3,6 @@ import thunkMiddleware from 'redux-thunk'
 import { createLogger } from 'redux-logger'
 import rootReducer from '../_reducers'
 import checkDate from '../_middlewares/checkDate'
-import getIds from '../_middlewares/getIds'
-import getNearestCoords from '../_middlewares/getNearestCoords'
 
 const loggerMiddleware = createLogger()
 
@@ -16,8 +14,6 @@ export const store = createStore(
     composeEnhancers(
         applyMiddleware(
             checkDate,
-            getIds,
-            getNearestCoords,
             thunkMiddleware,
             __DEV__ ? loggerMiddleware : ()=>y=>z=>y(z),
         )

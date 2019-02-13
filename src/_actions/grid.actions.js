@@ -15,8 +15,7 @@ function addByClick(value) {
         payload: {
             randomId: Math.random().toString(),
             value
-        },
-        getNearestCoords: true
+        }
     }
 }
 
@@ -27,8 +26,7 @@ function addByKeyPress(date) {
             randomId: Math.random().toString(),
             date
         },
-        checkDate: true,
-        getNearestCoords: true
+        ceckDate: true
     }
 }
 
@@ -38,9 +36,8 @@ function addEmpty(message) {
         payload: {
             empty: true,
             randomId: Math.random().toString(),
-            message,
-        },
-        getNearestCoords: true
+            message
+        }
     }
 }
 
