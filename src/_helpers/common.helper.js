@@ -1,4 +1,5 @@
 import { pythagoras } from './'
+import { peoplesConstants } from '../_constants'
 
 // function returns nearest free coordinates (X and Y) on grid layout, where we can add a new tile
 export const getNearestFreeXY = (layout, cols) => {
@@ -25,7 +26,7 @@ export const reSetPeoplesAttributes = (peoples) => {
 export const setPeoplesAges = (peoples) => {
     return peoples.map(people => {
         const age = pythagoras.getAge(people.date)
-        if (age.digits < 135)
+        if (age.digits < peoplesConstants.UPPER_LIMIT_AGE)
             people.age = age.format
         return people
     })

@@ -51,6 +51,7 @@ export const getCreationId = createSelector(gridGetter, (gc) => {
 })
 
 // gc is gridContent
+// value - people id which edited in modal
 export const getIdsByValue = (value) => createSelector(gridGetter, (gc) => {
 	return Object.keys(gc).filter(item => gc[item].value && gc[item].value == value)
 })

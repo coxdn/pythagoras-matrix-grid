@@ -1,5 +1,5 @@
 import React from 'react'
-import { Router, Route, Redirect } from 'react-router-dom'
+import { Router, Route/*, Redirect*/ } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { history } from '../_helpers'
 import { alertActions } from '../_actions'

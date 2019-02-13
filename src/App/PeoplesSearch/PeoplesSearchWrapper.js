@@ -4,7 +4,7 @@ import { Message } from './Message'
 import { PeoplesSearch } from './PeoplesSearch'
 import { gridActions, alertActions } from '../../_actions'
 
-class PeoplesSearchWrapper extends React.Component {
+class PeoplesSearchWrapper extends React.PureComponent {
     state = {
         count: 0,
         search: ''

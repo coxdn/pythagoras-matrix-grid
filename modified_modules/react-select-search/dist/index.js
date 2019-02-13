@@ -500,8 +500,8 @@ function (_React$Component) {
     value: function getNewOptionsList(options, value) {
       if (options && options.length > 0 && value && value.length > 0) {
         var fuse = new _fuse.default(options, this.props.fuse);
-        // console.log('--- no normal run getNewOptionsList', value, fuse.search(value));
         this.setState({ highlighted: 0 });
+        // console.log('--- getNewOptionsList', result, value, fuse.search(value), options, this.props.fuse);
         return fuse.search(value).map(function(item, index) {
           return Object.assign({}, item, {index: index});
         });

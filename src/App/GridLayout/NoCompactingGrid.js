@@ -1,4 +1,4 @@
-import React from "react"
+import React, { Fragment } from "react"
 import RGL, { WidthProvider } from "react-grid-layout"
 import { connect } from 'react-redux'
 import { DateInput } from '../_components'
@@ -43,25 +43,27 @@ class NoCompactingGrid extends React.PureComponent {
 
   generateDOM = (content) => {
     return content.map((item) => {
-      let innerJSX
+      let matrix
       const {id, value, digits, fullDate, intermediate, name, empty, age} = item
+
       if (empty) {
-        innerJSX =
-          <div>
-            <div className="control-button btn btn-default btn1" title="Убрать" onClick={this.handleRemove(id)}></div>
+        matrix =
+          <Fragment>
+            <div className="control-button btn btn-default btn-close" title="Убрать" onClick={this.handleRemove(id)}></div>
             <DateInput onHookRef={this.hookRef} onCalcNew={this.calcNew} />
-          </div>
+          </Fragment>
       } else {
         const cd = (x) => content.composeDigit(x, digits[x]) // shortest name
-        const saveOrName = name ? name : 
+        const nameField = name ? name : 
             <button type="button" className="btn btn-default btn-sm" onClick={this.createNew(id)}>
               <span className="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Сохранить
             </button>
-        innerJSX = 
-          <div>
-            <div className="control-button btn btn-default btn1" title="Убрать" onClick={this.handleRemove(id)} onMouseDown={ev => ev.stopPropagation()}></div>
-            {value ? <div className="control-button btn btn-default btn2" title="Изменить" onClick={this.editItem(value)} onMouseDown={ev => ev.stopPropagation()}></div> : null}
-            <div className="matrix-people-name">{saveOrName}</div>
+
+        matrix = 
+          <Fragment>
+            <div className="control-button btn btn-default btn-close" title="Убрать" onClick={this.handleRemove(id)} onMouseDown={ev => ev.stopPropagation()}></div>
+            {value ? <div className="control-button btn btn-default btn-edit" title="Изменить" onClick={this.editItem(value)} onMouseDown={ev => ev.stopPropagation()}></div> : null}
+            <div className="matrix-people-name">{nameField}</div>
             <div className="intermediate">
               <div className="summary">{intermediate}</div>
               <div className="date">{fullDate}{age.digits && age.digits<135 ? ' ('+age.format+')' : ''}</div>
@@ -72,12 +74,14 @@ class NoCompactingGrid extends React.PureComponent {
               <div className="center">{cd(4)}<br />{cd(5)}<br />{cd(6)}</div>
               <div>{cd(7)}<br />{cd(8)}<br />{cd(9)}</div>
             </div>
-          </div>
+          </Fragment>
       }
 
       return (
         <div key={id} onClick={this.handleItemClick}>
-          {innerJSX}
+          <div className="matrix-item">
+            {matrix}
+          </div>
         </div>
       )
     })
@@ -109,7 +113,7 @@ class NoCompactingGrid extends React.PureComponent {
           </ReactGridLayout>
           {
             !creationId
-              ? <div className="text-on-grid">Нажмите здесь чтобы добавить новый рассчет</div>
+              ? <div className="text-on-grid">Нажмите сюда чтобы рассчитать новую дату</div>
               : null
           }
         </div>

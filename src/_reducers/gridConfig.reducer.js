@@ -1,4 +1,5 @@
 import { gridConstants, peoplesConstants, editConstants } from '../_constants'
+import { getNearestFreeXY } from '../_helpers'
 
 const initialState = {
     className: "layout",
@@ -13,14 +14,16 @@ const initialState = {
 }
 
 export const gridConfig = (state = initialState, action) => {
-    const { type, payload, nearestCoords } = action
+    const { type, payload } = action
     var layout
 
     switch (type) {
         case peoplesConstants.ADD_ITEM_TO_GRID:
             if (payload.error) return state
+            // continuing case
+            // ˅˅˅˅˅˅˅˅˅˅˅˅˅
         case gridConstants.ADD_ITEM:
-            const {x, y} = nearestCoords
+            const {x, y} = getNearestFreeXY(state.layout, state.cols)
             return {...state,
                 items: state.items + 1,
                 layout: state.layout.concat({
