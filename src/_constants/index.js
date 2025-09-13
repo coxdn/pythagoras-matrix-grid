@@ -1,5 +1,0 @@
-export * from './alert.constants'
-export * from './user.constants'
-export * from './grid.constants'
-export * from './peoples.constants'
-export * from './edit.constants'
