@@ -7,16 +7,23 @@ import { gridActions, alertActions } from '../../_actions'
 class PeoplesSearchWrapper extends React.PureComponent {
     state = {
         count: 0,
-        search: ''
+        search: '',
+        selected: []
     }
 
-    handleSelected = (skip/*value*/, state/*, props*/) => {
-        // take the clicked ID (aka "value") field from clicked element in react-select-search result list
-        const value = state.clicked
-        // and if ID of clicked element is not empty
-        if(value)
-            // dispatch it for add calculate to grid-layout
-            this.props.gridAddByClick(value)
+    handleSelected = (value) => {
+        // value is either a single value or an array of values (multiple=true)
+        let clicked = null
+        if (Array.isArray(value)) {
+            const { selected } = this.state
+            clicked = value.find(v => !selected.includes(v)) || null
+            this.setState({ selected: value })
+        } else {
+            clicked = value
+        }
+        if (clicked) {
+            this.props.gridAddByClick(clicked)
+        }
     }
 
     // this is one of functions that have been added to module react-select-search
@@ -54,18 +61,19 @@ class PeoplesSearchWrapper extends React.PureComponent {
     }
 
     render() {
-        const { search, count } = this.state
-		return (
+        const { search, count, selected } = this.state
+        return (
             <div>
                 <Message search={search} count={count} />
                 <PeoplesSearch
                     peoples={this.props.peoples}
+                    selected={selected}
                     handleSelected={this.handleSelected}
                     onInputChange={this.onInputChange}
                     onInputKeyPress={this.onInputKeyPress}
                 />
             </div>
-            )
+        )
     }
 }
 
