@@ -1,3 +1,4 @@
 .idea
 package-lock.json
 node_backend/data/db.sqlite
+modified_modules/

@@ -1,4 +1,5 @@
-const remoteServerAjax = '/ajax.php';
+/* eslint no-undef: 0 */
+const remoteServerAjax = `${API_HOST}/ajax/`
 const urls = {
     save: `${remoteServerAjax}?save`,
     remove: `${remoteServerAjax}?remove`

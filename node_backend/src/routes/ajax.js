@@ -9,7 +9,7 @@ import {
 
 const router = express.Router();
 
-router.post('/ajax.php', async (req, res) => {
+router.all('/ajax', async (req, res) => {
   const q = req.query;
   const data = req.body.data ? JSON.parse(req.body.data) : {};
   const access = req.session.access || false;

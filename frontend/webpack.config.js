@@ -6,6 +6,8 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const mode = process.env.NODE_ENV || 'development'
 const production = mode === 'production'
+const backendPort = process.env.BACKEND_PORT || 3000
+const apiHost = production ? 'http://example.com' : ''
 
 module.exports = {
   mode,
@@ -27,8 +29,8 @@ module.exports = {
     inline            : true,
     hot               : true,
     proxy             : {
-      '/ajax.php': {
-        target      : 'http://cvetok.zzz.com.ua',
+      '/ajax': {
+        target      : `http://localhost:${backendPort}`,
         secure      : false,
         changeOrigin: true
       }
@@ -111,7 +113,8 @@ module.exports = {
   },
   plugins     : [
     new webpack.DefinePlugin({
-      __DEV__: JSON.stringify(!production)
+      __DEV__: JSON.stringify(!production),
+      API_HOST: JSON.stringify(apiHost),
     }),
     // new HtmlWebpackPlugin({
     //       // Create index.html file

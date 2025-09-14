@@ -1,6 +1,7 @@
 // import { authHeader } from '../_helpers';
 
-const remoteServerAjax = '/ajax.php';
+/* eslint no-undef: 0 */
+const remoteServerAjax = `${API_HOST}/ajax/`
 const urls = {
     login: `${remoteServerAjax}?login`,
     register: `${remoteServerAjax}?register`,

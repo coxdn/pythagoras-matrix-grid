@@ -1,6 +1,6 @@
 <?php
 
-	include('classes.php');
+include('../classes.php');
 
     header("Access-Control-Allow-Origin: *");
 
