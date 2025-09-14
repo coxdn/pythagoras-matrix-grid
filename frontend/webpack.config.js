@@ -1,5 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
+const babelOptionalChaining = require.resolve('@babel/plugin-transform-optional-chaining')
+const babelNullish = require.resolve('@babel/plugin-transform-nullish-coalescing-operator')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const mode = process.env.NODE_ENV || 'development'
@@ -43,31 +45,43 @@ module.exports = {
         enforce: 'pre',
         use    : 'eslint-loader'
       },
-      {
-        test   : /\.js$/,
-        loader : 'babel-loader',
-        exclude: /(node_modules)/,
-        include: path.join(__dirname, 'src'),
-        options: {
-          cacheDirectory: true,
-          plugins       : ["react-hot-loader/babel"]
-        }
-      },
+      // Transpile project sources (JSX/ES2015+) from ./src via Babel
       {
         test: /\.js$/,
-        // Explicitly transpile modern syntax inside these node_modules:
+        include: [
+          path.resolve(__dirname, 'src'),
+        ],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true
+            // presets/plugins are taken from .babelrc
+          }
+        }
+      },
+      // Transpile modern syntax inside selected node_modules to support Webpack 4
+      {
+        test: /\.js$/,
         include: [
           path.resolve(__dirname, 'node_modules/react-grid-layout'),
           path.resolve(__dirname, 'node_modules/react-draggable'),
           path.resolve(__dirname, 'node_modules/react-resizable'),
           path.resolve(__dirname, 'node_modules/fast-equals'),
-          path.resolve(__dirname, 'node_modules/react-select-search')
+          path.resolve(__dirname, 'node_modules/react-select-search'),
         ],
-        use    : {
-          loader : 'babel-loader',
+        use: {
+          loader: 'babel-loader',
           options: {
-            cacheDirectory: true
-            // All presets/plugins taken from .babelrc
+            babelrc: false,
+            configFile: false,
+            cacheDirectory: true,
+            presets: [
+              ['@babel/preset-env', { targets: { ie: '11' } }]
+            ],
+            plugins: [
+              babelOptionalChaining,
+              babelNullish
+            ]
           }
         }
       },
@@ -112,9 +126,7 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     alias     : {
       react             : path.resolve(path.join(__dirname, './node_modules/react')),
-      'react-dom'       : path.resolve(
-        path.join(__dirname, './node_modules/react-dom'),
-      ),
+      'react-dom'       : '@hot-loader/react-dom',
       'react-hot-loader': path.resolve(
         path.join(__dirname, './node_modules/react-hot-loader'),
       ),

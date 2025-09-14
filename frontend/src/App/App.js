@@ -1,5 +1,5 @@
 import React from 'react'
-import { Router, Route/*, Redirect*/ } from 'react-router-dom'
+import { Router, Route, Switch, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { history } from '../_helpers'
 import { alertActions } from '../_actions'
@@ -29,17 +29,18 @@ class App extends React.Component {
             <Router history={history}>
                 <div className="jumbotron">
                     <div className="container">
-                        <Route path="/app.html" component={LogoutButton} />
+                      <Route path="/app.html" render={() => <LogoutButton />} />
                         <div className="col-sm-8 col-sm-offset-1">
                             {_alert.hasIn(["user", "class"]) &&
                                 <div className={`alert ${_alert.getIn(["user", "class"])}`}>{_alert.getIn(["user", "message"])}</div>
                             }
-                            <div>
+                            <Switch>
+                                <Route exact path="/" render={() => <Redirect to="/login" />} />
                                 <PrivateRoute path="/app.html" component={HomePage} dispatch={dispatch} loggedIn={loggedIn} loaded={loaded} />
-                                <Route path="/login" component={LoginPage} loggedIn={loggedIn} />
+                                <Route path="/login" component={LoginPage} />
                                 <Route path="/register" component={RegisterPage} />
-                                {null /*<Route path="*" render={ () => <Redirect to="/login" /> } />*/}
-                            </div>
+                                <Redirect to="/login" />
+                            </Switch>
                         </div>
                     </div>
                 </div>
