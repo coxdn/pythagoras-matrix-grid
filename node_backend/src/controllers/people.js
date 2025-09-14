@@ -1,6 +1,6 @@
-const { run, get, all } = require('../db');
+import { run, get, all } from '../db/index.js';
 
-async function loadList(user_id, people_id = null) {
+export async function loadList(user_id, people_id = null) {
   const params = [user_id];
   let sql = 'SELECT b.* FROM birthdates b WHERE b.user_id=?';
   if (people_id) {
@@ -40,7 +40,7 @@ async function checkOwnershipUser(id, user_id) {
   return { error: false };
 }
 
-async function savePeople(id, name, date, tags, user_id) {
+export async function savePeople(id, name, date, tags, user_id) {
   id = parseInt(id, 10) || 0;
   name = String(name || '').substring(0, 255);
   date = String(date || '').replace(/[^\d\.]/g, '').substring(0, 10);
@@ -64,9 +64,7 @@ async function savePeople(id, name, date, tags, user_id) {
   const toRemove = tagIdsDB.filter((t) => !tagIds.includes(t));
   if (toRemove.length)
     await run(
-      `DELETE FROM birthdates_tags WHERE id IN (${toRemove
-        .map(() => '?')
-        .join(',')})`,
+      `DELETE FROM birthdates_tags WHERE id IN (${toRemove.map(() => '?').join(',')})`,
       toRemove
     );
 
@@ -81,7 +79,7 @@ async function savePeople(id, name, date, tags, user_id) {
       'INSERT INTO birthdates (user_id, peoplename, birthdate) VALUES (?, ?, ?)',
       [user_id, name, date]
     );
-    insertId = r.lastID;
+    insertId = r.insertId;
   }
 
   for (const tag of tags) {
@@ -100,7 +98,7 @@ async function savePeople(id, name, date, tags, user_id) {
   return { error: false, insert_id: insertId };
 }
 
-async function removePeople(id, user_id) {
+export async function removePeople(id, user_id) {
   const check = await checkOwnershipUser(id, user_id);
   if (check.error) return check;
   await run('DELETE FROM birthdates WHERE id=?', [id]);
@@ -113,14 +111,14 @@ async function isPeopleExists(id) {
   return row && row.cnt !== 0;
 }
 
-async function copyPeoples(idArr, user_id) {
+export async function copyPeoples(idArr, user_id) {
   for (const id of idArr) {
     if (!(await isPeopleExists(id))) continue;
     const r = await run(
       'INSERT INTO birthdates (user_id, peoplename, birthdate) SELECT ?, peoplename, birthdate FROM birthdates WHERE id=?',
       [user_id, id]
     );
-    const insertId = r.lastID;
+    const insertId = r.insertId;
     const tagRows = await all(
       'SELECT bt.tag FROM birthdates_tags bt WHERE bt.people_id=?',
       [id]
@@ -135,7 +133,7 @@ async function copyPeoples(idArr, user_id) {
   return true;
 }
 
-module.exports = {
+export default {
   loadList,
   savePeople,
   removePeople,

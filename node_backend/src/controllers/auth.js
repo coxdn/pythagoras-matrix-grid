@@ -1,6 +1,7 @@
-const { get, run, md5 } = require('../db');
+import { get, run } from '../db/index.js';
+import { md5 } from '../utils/hash.js';
 
-async function login(username, password) {
+export async function login(username, password) {
   const row = await get(
     'SELECT * FROM users WHERE username=? AND password=?',
     [username, md5(password)]
@@ -9,12 +10,12 @@ async function login(username, password) {
   return { id: row.id, username: row.username };
 }
 
-async function isUserExists(username) {
+export async function isUserExists(username) {
   const row = await get('SELECT id FROM users WHERE username=?', [username]);
   return !!row;
 }
 
-async function register(username, password) {
+export async function register(username, password) {
   if (await isUserExists(username))
     return { error: true, message: 'USER_EXISTS' };
   if (/[^A-Za-z\d]/.test(username))
@@ -23,12 +24,13 @@ async function register(username, password) {
     username,
     md5(password),
   ]);
-  if (r.lastID)
-    return { error: false, message: 'User was created', id: r.lastID };
+  const id = r.insertId;
+  if (id)
+    return { error: false, message: 'User was created', id };
   return { error: true, message: 'UNKNOWN_ERROR' };
 }
 
-module.exports = {
+export default {
   login,
   register,
 };

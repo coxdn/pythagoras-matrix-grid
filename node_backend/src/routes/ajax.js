@@ -1,6 +1,11 @@
-const express = require('express');
-const { login, register } = require('../controllers/auth');
-const { loadList, savePeople, removePeople, copyPeoples } = require('../controllers/people');
+import express from 'express';
+import { login, register } from '../controllers/auth.js';
+import {
+  loadList,
+  savePeople,
+  removePeople,
+  copyPeoples,
+} from '../controllers/people.js';
 
 const router = express.Router();
 
@@ -89,4 +94,4 @@ router.post('/ajax.php', async (req, res) => {
   res.json({ error: true });
 });
 
-module.exports = router;
+export default router;

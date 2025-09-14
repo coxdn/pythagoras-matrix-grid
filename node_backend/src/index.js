@@ -1,7 +1,7 @@
-const express = require('express');
-const session = require('express-session');
-const { initDb } = require('./db');
-const ajaxRouter = require('./routes/ajax');
+import express from 'express';
+import session from 'express-session';
+import { initDb } from './db/index.js';
+import ajaxRouter from './routes/ajax.js';
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
@@ -18,10 +18,10 @@ app.use(
   })
 );
 
-initDb();
-app.use('/', ajaxRouter);
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`API server listening on ${PORT}`);
+initDb().then(() => {
+  app.use('/', ajaxRouter);
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`API server listening on ${PORT}`);
+  });
 });
