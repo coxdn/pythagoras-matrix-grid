@@ -35,8 +35,8 @@ export async function loadList(user_id, people_id = null) {
 
 async function checkOwnershipUser(id, user_id) {
   const row = await get('SELECT user_id FROM birthdates WHERE id=?', [id]);
-  if (!row) return { error: true, step: 'auth1' };
-  if (row.user_id !== user_id) return { error: true, step: 'auth2' };
+  if (!row) return { error: 'people not found', step: 'auth1' };
+  if (row.user_id !== user_id) return { error: 'access denied', step: 'auth2' };
   return { error: false };
 }
 
@@ -60,7 +60,7 @@ export async function savePeople(id, name, date, tags, user_id) {
   );
   const tagIdsDB = existing.map((r) => r.id);
   const diff = tagIds.filter((t) => !tagIdsDB.includes(t));
-  if (diff.length) return { error: true, step: tags };
+  if (diff.length) return { error: 'invalid tag references', step: tags };
   const toRemove = tagIdsDB.filter((t) => !tagIds.includes(t));
   if (toRemove.length)
     await run(

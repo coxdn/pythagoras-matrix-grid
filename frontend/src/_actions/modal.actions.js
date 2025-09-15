@@ -33,7 +33,12 @@ function showCreating(id) {
 
 
 function save({id, value, _name, date, tags: oldTags}) {
-    const tags = oldTags.map(item => item.className ? {label: item.label} : {label: item.label, value: item.value})
+    const tags = oldTags.map(item => {
+        const num = parseInt(item.value, 10)
+        return item.__isNew__ || Number.isNaN(num)
+            ? { label: item.label }
+            : { label: item.label, value: num }
+    })
     return dispatch => {
         const checkDate = pythagoras.checkDate(date)
         if (checkDate.error) {

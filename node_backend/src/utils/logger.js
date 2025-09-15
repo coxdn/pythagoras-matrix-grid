@@ -14,14 +14,17 @@ if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir, { recursive: true });
 }
 
-// Common log format with timestamp
-const logFormat = winston.format.printf(({ timestamp, level, message }) => {
-  return `${timestamp} [${level}] ${message}`;
+// Common log format with timestamp, metadata and stack traces
+const logFormat = winston.format.printf(({ timestamp, level, message, stack, ...meta }) => {
+  const metaStr = Object.keys(meta).length ? ` ${JSON.stringify(meta)}` : '';
+  const stackStr = stack ? `\n${stack}` : '';
+  return `${timestamp} [${level}] ${message}${metaStr}${stackStr}`;
 });
 
 const logger = winston.createLogger({
   level: 'info',
   format: winston.format.combine(
+    winston.format.errors({ stack: true }),
     winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
     logFormat
   ),
@@ -36,6 +39,7 @@ const logger = winston.createLogger({
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.colorize(),
+        winston.format.errors({ stack: true }),
         winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         logFormat
       ),

@@ -15,14 +15,19 @@ router.all('/ajax', async (req, res) => {
   const data = req.body.data ? JSON.parse(req.body.data) : {};
   const access = req.session.access || false;
   const action = Object.keys(q).join(',') || 'unknown';
+  const { password, ...safeData } = data;
+  const ip = req.ip;
   logger.info(`Request: ${action}`, {
     user: access ? access.id : 'guest',
+    ip,
+    query: q,
+    data: safeData,
   });
 
   try {
     if (q.logout !== undefined) {
       req.session.access = false;
-      logger.info('Logout', { user: access ? access.id : 'guest' });
+      logger.info('Logout', { user: access ? access.id : 'guest', ip });
       return res.json({ loggedIn: false });
     }
 
@@ -31,23 +36,27 @@ router.all('/ajax', async (req, res) => {
         const r = await loadList(access.id);
         logger.info('Search result', {
           user: access.id,
+          ip,
           count: r && r.peoples ? r.peoples.length : 0,
+          success: !(r && r.error),
         });
         return res.json(r);
       }
       if (q.login !== undefined) {
-        logger.info('Login status', { user: access.id });
+        logger.info('Login status', { user: access.id, ip });
         return res.json({ ...access, loggedIn: true });
       }
       if (q.getCurrent !== undefined && q.HomePage === undefined) {
-        logger.info('Get current user', { user: access.id });
+        logger.info('Get current user', { user: access.id, ip });
         return res.json({ user: access });
       }
       if (q.getCurrent !== undefined) {
         const peoples = await loadList(access.id);
         logger.info('Get current with peoples', {
           user: access.id,
+          ip,
           count: peoples && peoples.peoples ? peoples.peoples.length : 0,
+          success: !(peoples && peoples.error),
         });
         return res.json({ user: access, peoples: peoples ? peoples.peoples : [] });
       }
@@ -59,12 +68,16 @@ router.all('/ajax', async (req, res) => {
           data.tags || [],
           access.id
         );
-        logger.info('Save people', {
-          user: access.id,
-          error: save.error || false,
-        });
-        if (save.error)
+        if (save.error) {
+          logger.error('Save people', {
+            user: access.id,
+            ip,
+            error: save.error,
+            step: save.step,
+          });
           return res.json({ error: save.error, step: save.step });
+        }
+        logger.info('Save people', { user: access.id, ip });
         const updated = await loadList(
           access.id,
           save.insert_id ? save.insert_id : data.id
@@ -73,7 +86,16 @@ router.all('/ajax', async (req, res) => {
       }
       if (q.remove !== undefined) {
         const r = await removePeople(data.id, access.id);
-        logger.info('Remove people', { user: access.id, error: r.error });
+        if (r.error) {
+          logger.error('Remove people', {
+            user: access.id,
+            ip,
+            error: r.error,
+            step: r.step,
+          });
+        } else {
+          logger.info('Remove people', { user: access.id, ip });
+        }
         return res.json({ error: r.error });
       }
     }
@@ -81,7 +103,10 @@ router.all('/ajax', async (req, res) => {
     if (!access) {
       if (q.login !== undefined) {
         if (!data.username || !data.password) {
-          logger.info('Login attempt missing credentials');
+          logger.info('Login attempt missing credentials', {
+            ip,
+            data: { username: data.username || null },
+          });
           return res.json({ loggedIn: false });
         }
         const loginRes = await login(data.username, data.password);
@@ -89,13 +114,14 @@ router.all('/ajax', async (req, res) => {
         logger.info('Login result', {
           username: data.username,
           success: !!loginRes,
+          ip,
         });
         return res.json(
           loginRes ? { ...loginRes, loggedIn: true } : { loggedIn: false }
         );
       }
       if (q.getCurrent !== undefined) {
-        logger.info('Get current user (guest)');
+        logger.info('Get current user (guest)', { ip });
         return res.json({ user: req.session.access });
       }
       if (q.register !== undefined) {
@@ -105,6 +131,7 @@ router.all('/ajax', async (req, res) => {
         logger.info('Register result', {
           username,
           success: !reg.error,
+          ip,
         });
         if (!reg.error) {
           await copyPeoples([88, 89, 90, 91, 92], reg.id);
@@ -120,15 +147,17 @@ router.all('/ajax', async (req, res) => {
       }
     }
 
-    logger.warn('Unknown action', { action, user: access ? access.id : 'guest' });
-    res.json({ error: true });
+    logger.warn('Unknown action', { action, user: access ? access.id : 'guest', ip });
+    res.json({ error: 'unknown action' });
   } catch (err) {
     logger.error('Request error', {
       action,
       user: access ? access.id : 'guest',
+      ip,
       error: err.message,
+      stack: err.stack,
     });
-    res.status(500).json({ error: true });
+    res.status(500).json({ error: err.message });
   }
 });
 
