@@ -1,0 +1,112 @@
+div.matrix-people-name {
+	/* width: 100%; */
+	width: 150px;
+	font-size: 12px;
+	display: block;
+	height: 43px;
+    padding: 3px 5px;
+}
+div.intermediate {
+	font-size: 11px;
+	padding: 0 5px;
+}
+
+div.matrix {
+	display: flex;
+	border: 1px solid #e2e2e2;
+	border-radius: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+    width: 95%;
+    margin-left: 4px;
+}
+div.matrix div {
+	display: inline-block;
+	text-align: center;
+	flex: auto;
+}
+div.intermediate div.date {float:left;}
+.intermediate .summary {margin-left: 2px; float:right;}
+div.clear-button, div.do-save, div.search-result {cursor: pointer;}
+div.do-save {
+	color: #9c9c9c;
+	font-size: 18px;
+	border: 1px solid gray;
+	padding: 1px;
+	border-radius: 5px;
+	box-shadow: 2px 2px #d8d8d8;
+	text-align: center;
+}
+
+div.control-button {
+    right: 0px;
+    position: absolute;
+}
+
+div.control-button.btn-edit {
+	margin-top: 22px;
+	padding-left: 1px;
+}
+
+div.control-button.btn-close:after {
+    font-size: 14px;
+    font-family: inherit;
+    content: "\2716";
+}
+
+div.control-button.btn-edit:after {
+    font-size: 12px;
+    font-family: inherit;
+    content: "\270E";
+}
+
+div.control-button {
+    /* background-color: #337ab759; */
+    /* font-weight: bold; */
+	/* font-family: Tahoma; */
+    padding: 0px 3px 0px 2px;
+    font-size: 14px;
+    border-radius: 3px;
+    margin-top: 2px;
+    margin-right: 3px;
+    line-height: normal;
+    float: right;
+}
+
+div#textWidth {
+    position: absolute;
+    visibility: hidden;
+    height: auto;
+    width: 180px;
+    /*white-space: nowrap;*/
+}
+div.log {display: block;}
+div.close-work-area {float: right;}
+div.clear {
+	clear: both;
+	height: 5px;
+}
+
+div.clear-all {
+    margin-left: 710px;
+    font-size: 20px;
+    border: 1px solid #9e9e9e;
+    display: inline;
+    padding: 2px 4px;
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 2px 2px #d8d8d8;
+}
+
+div.react-grid-item.react-draggable input {
+	font-size: 16px;
+	margin: 0px 0 0 18px;
+    width: 140px;
+    text-align: center;
+}
+
+div.react-grid-item.react-draggable>div>div.form-group {
+	padding-top: 45px;
+}
