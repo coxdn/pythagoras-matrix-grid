@@ -12,18 +12,10 @@ class PeoplesSearchWrapper extends React.PureComponent {
     }
 
     handleSelected = (value) => {
-        // value is either a single value or an array of values (multiple=true)
-        let clicked = null
-        if (Array.isArray(value)) {
-            const { selected } = this.state
-            clicked = value.find(v => !selected.includes(v)) || null
-            this.setState({ selected: value })
-        } else {
-            clicked = value
+        if (value) {
+            this.props.gridAddByClick(value)
         }
-        if (clicked) {
-            this.props.gridAddByClick(clicked)
-        }
+        this.setState({ selected: [] })
     }
 
     // this is one of functions that have been added to module react-select-search

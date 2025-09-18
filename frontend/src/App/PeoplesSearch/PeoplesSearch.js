@@ -1,5 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
+// no comments
 
 class PeoplesSearch extends React.PureComponent {
     matchesQuery = (item, q) => {
@@ -67,9 +68,15 @@ class PeoplesSearch extends React.PureComponent {
             ? (peoples || []).filter(o => selected.includes(o.value))
             : null
 
-        const onChange = (opts) => {
-            const values = Array.isArray(opts) ? opts.map(o => o.value) : []
-            handleSelected(values)
+        const onChange = (opts, actionMeta) => {
+            if (actionMeta && actionMeta.option) {
+                handleSelected(actionMeta.option.value)
+                return
+            }
+            if (Array.isArray(opts) && opts.length) {
+                const last = opts[opts.length - 1]
+                if (last) handleSelected(last.value)
+            }
         }
 
         const filterOption = (candidate, rawInput) => {
@@ -87,6 +94,11 @@ class PeoplesSearch extends React.PureComponent {
                 ...base,
                 width: 545,
                 marginLeft: 10,
+                zIndex: 1200,
+            }),
+            menuPortal: (base) => ({
+                ...base,
+                zIndex: 1200
             }),
         }
 
@@ -107,6 +119,7 @@ class PeoplesSearch extends React.PureComponent {
                 formatOptionLabel={this.formatOptionLabel}
                 filterOption={filterOption}
                 classNamePrefix="react-select"
+                menuPortalTarget={document.body}
                 styles={selectStyles}
             />
         )
