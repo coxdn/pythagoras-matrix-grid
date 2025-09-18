@@ -1,89 +1,113 @@
 import React from 'react'
-import SelectSearch from 'react-select-search'
-import '../../../css/select-search.css'
+import Select from 'react-select'
 
 class PeoplesSearch extends React.PureComponent {
-    // Custom text filter that searches across multiple fields
-    createFilter = (onInputChange) => (options, { value }) => {
-        const q = (value || '').toString().trim().toLowerCase()
-        const filtered = !q
-            ? options
-            : options.filter(opt => {
-                const item = opt.item ? opt.item : opt
-                const fields = [item.name, item.date, item.age, item.tagSearch]
-                return fields.some(f => f && String(f).toLowerCase().includes(q))
-            })
+    matchesQuery = (item, q) => {
+        const query = (q || '').toString().trim().toLowerCase()
+        if (!query) return true
+        const fields = [item.name, item.date, item.age, item.tagSearch]
+        return fields.some(f => f && String(f).toLowerCase().includes(query))
+    }
+
+    handleInputChange = (inputValue) => {
+        const { peoples, onInputChange } = this.props
+        const filtered = (peoples || []).filter(opt => this.matchesQuery(opt, inputValue))
         if (typeof onInputChange === 'function') {
-            // Report current query and filtered list length
-            onInputChange(value || '', filtered)
+            onInputChange(inputValue || '', filtered)
         }
-        return filtered
+        return inputValue
     }
 
-    // Wrap library's input to intercept typing and key presses
-    renderValue = (valueProps, snapshot, className) => {
-        const { onInputChange, onInputKeyPress } = this.props
-        const handleChange = (e) => {
-            // Keep library behavior
-            if (valueProps.onChange) valueProps.onChange(e)
-            // Mirror to wrapper for Message
-            if (typeof onInputChange === 'function') {
-                onInputChange(e.target.value, snapshot.options)
+    handleKeyDown = (e) => {
+        const { onInputKeyPress } = this.props
+        if (typeof onInputKeyPress === 'function') {
+            const proceed = onInputKeyPress(e)
+            if (proceed === false) {
+                e.preventDefault()
+                e.stopPropagation()
             }
         }
-        const handleKeyDown = (e) => {
-            // Let wrapper decide whether to consume the event
-            if (typeof onInputKeyPress === 'function') {
-                const proceed = onInputKeyPress(e)
-                if (proceed === false) {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    return
-                }
-            }
-            if (valueProps.onKeyDown) valueProps.onKeyDown(e)
-        }
-        return (
-            <input
-                {...valueProps}
-                className={className}
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-            />
-        )
     }
 
-    renderOption = (domProps, option /* , snapshot, className is in domProps.className */) => {
+    formatOptionLabel = (option) => {
         const item = option.item ? option.item : option
-        const photo = item.photo ? <img className="avatar" src={item.photo} /> : null
-        const tag = item.tags ? item.tags.map((tag, i) => <span key={i}>{tag.value}</span>) : ''
+        const tagStyle = {
+            display: 'inline-block',
+            border: '1px solid gray',
+            borderRadius: 10,
+            padding: '2px 4px',
+            lineHeight: '12px',
+            fontSize: 12,
+            marginRight: 4,
+        }
+        const photo = item.photo
+            ? (
+                <img
+                    src={item.photo}
+                    alt={item.name || ''}
+                    style={{ width: 40, height: 40, borderRadius: '50%', marginRight: 10 }}
+                />
+            )
+            : null
+        const tag = item.tags ? item.tags.map((t, i) => <span key={i} style={tagStyle}>{t.value}</span>) : ''
         return (
-            <button {...domProps}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 {photo}
                 <span>{item.name}</span>
                 <span>{item.date}{item.age ? ` (${item.age})` : ''}</span>
                 <span>{tag}</span>
-            </button>
+            </div>
         )
     }
 
     render() {
-        const { peoples, selected, handleSelected, onInputChange } = this.props
-        const filterOptions = [this.createFilter(onInputChange)]
+        const { peoples, selected, handleSelected, inputValue } = this.props
+
+        const valueOptions = Array.isArray(selected)
+            ? (peoples || []).filter(o => selected.includes(o.value))
+            : null
+
+        const onChange = (opts) => {
+            const values = Array.isArray(opts) ? opts.map(o => o.value) : []
+            handleSelected(values)
+        }
+
+        const filterOption = (candidate, rawInput) => {
+            const item = candidate.data.item ? candidate.data.item : candidate.data
+            return this.matchesQuery(item, rawInput)
+        }
+
+        const selectStyles = {
+            control: (base) => ({
+                ...base,
+                width: 545,
+                marginLeft: 10,
+            }),
+            menu: (base) => ({
+                ...base,
+                width: 545,
+                marginLeft: 10,
+            }),
+        }
 
         return (
-            <SelectSearch
+            <Select
                 name="peoples"
-                multiple
+                isMulti
                 options={peoples}
-                value={selected}
+                value={valueOptions}
                 placeholder="Поиск..."
                 autoFocus
-                filterOptions={filterOptions}
-                renderOption={this.renderOption}
-                renderValue={this.renderValue}
-                onChange={handleSelected}
-                search
+                onChange={onChange}
+                onInputChange={this.handleInputChange}
+                inputValue={inputValue}
+                onKeyDown={this.handleKeyDown}
+                getOptionValue={(o) => o.value}
+                getOptionLabel={(o) => o.name || String(o.value)}
+                formatOptionLabel={this.formatOptionLabel}
+                filterOption={filterOption}
+                classNamePrefix="react-select"
+                styles={selectStyles}
             />
         )
     }

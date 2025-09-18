@@ -69,6 +69,7 @@ class PeoplesSearchWrapper extends React.PureComponent {
                     peoples={this.props.peoples}
                     selected={selected}
                     handleSelected={this.handleSelected}
+                    inputValue={search}
                     onInputChange={this.onInputChange}
                     onInputKeyPress={this.onInputKeyPress}
                 />

@@ -3,8 +3,6 @@ import { NoCompactingGrid, GridInfoWrapper } from "../GridLayout"
 import { PeoplesSearchWrapper } from "../PeoplesSearch"
 import { userActions } from '../../_actions'
 
-import 'react-select-search/style.css'
-
 class HomePage extends React.Component {
     componentDidMount() {
         this.props.dispatch(userActions.getCurrent())

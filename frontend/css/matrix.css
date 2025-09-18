@@ -45,26 +45,26 @@ div.control-button {
 
 div.control-button.btn-edit {
 	margin-top: 22px;
-	padding-left: 3px;
+	padding-left: 1px;
 }
 
 div.control-button.btn-close:after {
-    font-family: fontawesome;
     font-size: 14px;
-    content: "\F00D";
+    font-family: inherit;
+    content: "\2716";
 }
 
 div.control-button.btn-edit:after {
-    font-family: fontawesome;
     font-size: 12px;
-    content: "\F040";
+    font-family: inherit;
+    content: "\270E";
 }
 
 div.control-button {
     /* background-color: #337ab759; */
     /* font-weight: bold; */
 	/* font-family: Tahoma; */
-    padding: 0px 3px 1px 2px;
+    padding: 0px 3px 0px 2px;
     font-size: 14px;
     border-radius: 3px;
     margin-top: 2px;
