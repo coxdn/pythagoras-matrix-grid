@@ -49,19 +49,34 @@ class NoCompactingGrid extends React.PureComponent {
       if (empty) {
         matrix =
           <Fragment>
-            <div className="control-button btn btn-default btn-close" title="Убрать" onClick={this.handleRemove(id)}></div>
+            <div
+              className="control-button btn btn-default btn-close"
+              title="Убрать"
+              onClick={this.handleRemove(id)}
+              onMouseDown={ev => ev.stopPropagation()}
+            ></div>
             <DateInput onHookRef={this.hookRef} onCalcNew={this.calcNew} />
           </Fragment>
       } else {
         const cd = (x) => content.composeDigit(x, digits[x]) // shortest name
         const nameField = name ? name : 
-            <button type="button" className="btn btn-default btn-sm" onClick={this.createNew(id)}>
+            <button
+              type="button"
+              className="btn btn-default btn-sm"
+              onClick={this.createNew(id)}
+              onMouseDown={ev => ev.stopPropagation()}
+            >
               <span className="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Сохранить
             </button>
 
         matrix = 
           <Fragment>
-            <div className="control-button btn btn-default btn-close" title="Убрать" onClick={this.handleRemove(id)} onMouseDown={ev => ev.stopPropagation()}></div>
+            <div
+              className="control-button btn btn-default btn-close"
+              title="Убрать"
+              onClick={this.handleRemove(id)}
+              onMouseDown={ev => ev.stopPropagation()}
+            ></div>
             {value ? <div className="control-button btn btn-default btn-edit" title="Изменить" onClick={this.editItem(value)} onMouseDown={ev => ev.stopPropagation()}></div> : null}
             <div className="matrix-people-name">{nameField}</div>
             <div className="intermediate">
