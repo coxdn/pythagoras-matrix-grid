@@ -1,5 +1,7 @@
 import React from 'react'
 import Select from 'react-select'
+import { TooltipText } from './TooltipText'
+import '../../../css/select-search.css'
 
 class PeoplesSearch extends React.PureComponent {
     normalizeSearchText = (value) => String(value || '')
@@ -100,8 +102,23 @@ class PeoplesSearch extends React.PureComponent {
         }
     }
 
+    formatAuditTooltip = (createdAt, updatedAt) => {
+        const lines = []
+        if (createdAt) lines.push(`Создано: ${createdAt}`)
+        if (updatedAt) lines.push(`Изменено: ${updatedAt}`)
+        return lines.join('\n')
+    }
+
+    getTagLabel = (tag) => {
+        if (!tag) return ''
+        if (tag.value !== undefined && tag.value !== null) return tag.value
+        if (tag.label !== undefined && tag.label !== null) return tag.label
+        return tag
+    }
+
     formatOptionLabel = (option) => {
         const item = option.item ? option.item : option
+        const peopleTooltip = this.formatAuditTooltip(item.createdAt, item.updatedAt)
         const tagStyle = {
             display: 'inline-block',
             border: '1px solid gray',
@@ -120,12 +137,22 @@ class PeoplesSearch extends React.PureComponent {
                 />
             )
             : null
-        const tag = item.tags ? item.tags.map((t, i) => <span key={i} style={tagStyle}>{t.value}</span>) : ''
+        const tag = item.tags
+            ? item.tags.map((t, i) => (
+                <TooltipText
+                    key={i}
+                    style={tagStyle}
+                    title={this.formatAuditTooltip(t.createdAt, t.updatedAt)}
+                >
+                    {this.getTagLabel(t)}
+                </TooltipText>
+            ))
+            : ''
         return (
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 {photo}
-                <span>{item.name}</span>
-                <span>{item.date}{item.age ? ` (${item.age})` : ''}</span>
+                <TooltipText title={peopleTooltip}>{item.name}</TooltipText>
+                <TooltipText title={peopleTooltip}>{item.date}{item.age ? ` (${item.age})` : ''}</TooltipText>
                 <span>{tag}</span>
             </div>
         )

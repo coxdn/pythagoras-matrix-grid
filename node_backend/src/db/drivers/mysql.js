@@ -28,6 +28,28 @@ export async function all(sql, params = []) {
   return rows;
 }
 
+async function ensureBirthdatesTagsAuditColumns() {
+  const columns = await all(
+    `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+      WHERE TABLE_SCHEMA=DATABASE()
+        AND TABLE_NAME='birthdates_tags'
+        AND COLUMN_NAME IN ('dt_created', 'dt_updated')`
+  );
+  const columnNames = columns.map((row) => String(row.COLUMN_NAME).toLowerCase());
+
+  if (!columnNames.includes('dt_created')) {
+    await run(
+      'ALTER TABLE birthdates_tags ADD COLUMN dt_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP'
+    );
+  }
+
+  if (!columnNames.includes('dt_updated')) {
+    await run(
+      'ALTER TABLE birthdates_tags ADD COLUMN dt_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'
+    );
+  }
+}
+
 export async function initDb() {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
@@ -40,6 +62,8 @@ export async function initDb() {
   for (const stmt of statements) {
     await run(stmt);
   }
+
+  await ensureBirthdatesTagsAuditColumns();
 
   const row = await get('SELECT COUNT(*) AS cnt FROM users');
   if (row && row.cnt === 0) {

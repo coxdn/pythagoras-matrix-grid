@@ -55,7 +55,9 @@ INSERT INTO `birthdates` (`id`, `user_id`, `peoplename`, `birthdate`, `dt_create
 CREATE TABLE `birthdates_tags` (
   `id` int(11) NOT NULL,
   `tag` text NOT NULL,
-  `people_id` int(11) NOT NULL
+  `people_id` int(11) NOT NULL,
+  `dt_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dt_updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 --

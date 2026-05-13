@@ -36,6 +36,37 @@ export function all(sql, params = []) {
   });
 }
 
+async function ensureBirthdatesTagsAuditColumns() {
+  const columns = await all('PRAGMA table_info(birthdates_tags)');
+  const columnNames = columns.map((column) => column.name);
+  if (columnNames.includes('dt_created') && columnNames.includes('dt_updated')) {
+    return;
+  }
+
+  const dtCreatedExpr = columnNames.includes('dt_created')
+    ? 'COALESCE(dt_created, CURRENT_TIMESTAMP)'
+    : 'CURRENT_TIMESTAMP';
+  const dtUpdatedExpr = columnNames.includes('dt_updated')
+    ? 'COALESCE(dt_updated, CURRENT_TIMESTAMP)'
+    : 'CURRENT_TIMESTAMP';
+
+  await run('DROP TABLE IF EXISTS birthdates_tags_audit_migration');
+  await run(`CREATE TABLE birthdates_tags_audit_migration (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tag TEXT NOT NULL,
+    people_id INTEGER NOT NULL,
+    dt_created DATETIME DEFAULT CURRENT_TIMESTAMP,
+    dt_updated DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`);
+  await run(
+    `INSERT INTO birthdates_tags_audit_migration (id, tag, people_id, dt_created, dt_updated)
+      SELECT id, tag, people_id, ${dtCreatedExpr}, ${dtUpdatedExpr}
+      FROM birthdates_tags`
+  );
+  await run('DROP TABLE birthdates_tags');
+  await run('ALTER TABLE birthdates_tags_audit_migration RENAME TO birthdates_tags');
+}
+
 export async function initDb() {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
@@ -48,6 +79,8 @@ export async function initDb() {
   for (const stmt of statements) {
     await run(stmt);
   }
+
+  await ensureBirthdatesTagsAuditColumns();
 
   const row = await get('SELECT COUNT(*) AS cnt FROM users');
   if (row && row.cnt === 0) {

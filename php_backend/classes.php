@@ -59,6 +59,20 @@ class Request {
 	function Request() {
 		$this->db = new Database();
 		$this->mysql = $this->db->connect();
+		$this->ensureBirthdatesTagsAuditColumns();
+	}
+
+	private function ensureBirthdatesTagsAuditColumns() {
+		$q = $this->db->query("SHOW COLUMNS FROM birthdates_tags WHERE Field IN ('dt_created', 'dt_updated')");
+		$columns = [];
+		while($row = $this->db->fetch_array($q))
+			$columns[] = $row['Field'];
+
+		if(!in_array('dt_created', $columns))
+			$this->db->query("ALTER TABLE birthdates_tags ADD COLUMN dt_created datetime NOT NULL DEFAULT CURRENT_TIMESTAMP");
+
+		if(!in_array('dt_updated', $columns))
+			$this->db->query("ALTER TABLE birthdates_tags ADD COLUMN dt_updated datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
 	}
 
 	function loadList($user_id, $people_id = false) {
@@ -75,7 +89,9 @@ class Request {
 			$peoples[] = array(
 				'value' => $row['id'],
 				'name' => $row['peoplename'],
-				'date' => $row['birthdate']
+				'date' => $row['birthdate'],
+				'createdAt' => $row['dt_created'],
+				'updatedAt' => $row['dt_updated']
 			);
 		}
 
@@ -89,11 +105,16 @@ class Request {
 		$sql_query = $this->db->query($querystring);
 		while($row = $this->db->fetch_array($sql_query)) {
 			if(!isset($tags[$row['people_id']])) $tags[$row['people_id']] = [];
-			$tags[$row['people_id']][] = ['id' => $row['id'], 'value' => $row['tag']];
+			$tags[$row['people_id']][] = [
+				'id' => $row['id'],
+				'value' => $row['tag'],
+				'createdAt' => $row['dt_created'],
+				'updatedAt' => $row['dt_updated']
+			];
 		}
 
 		$peoples = array_map(function($name) use($tags) {
-			$tags_ = $tags[$name['value']];
+			$tags_ = isset($tags[$name['value']]) ? $tags[$name['value']] : [];
 			return array_merge($name, ['tags' => (count($tags_) ? $tags_ : [])]);
 		}, $peoples);
 		return ['peoples' => $peoples];
@@ -163,7 +184,8 @@ class Request {
 			return ['error' => true, 'step' => $tags];
 
 		$tag_ids_to_remove = array_diff($tag_ids_DB, $tag_ids);
-		$q = $this->db->query("DELETE FROM birthdates_tags WHERE id IN (" . implode(", ", $tag_ids_to_remove) . ")");
+		if(count($tag_ids_to_remove))
+			$q = $this->db->query("DELETE FROM birthdates_tags WHERE id IN (" . implode(", ", $tag_ids_to_remove) . ")");
 
 		if($id)
 			// edit old people
@@ -179,7 +201,7 @@ class Request {
 			$tag_text = $this->db->ads($tag->label);
 			if(isset($tag->value)) {
 				$tag_id = (int)$tag->value;
-				$q = $this->db->query("UPDATE birthdates_tags SET tag='$tag_text' WHERE id='$tag_id'");
+				$q = $this->db->query("UPDATE birthdates_tags SET tag='$tag_text', dt_updated=NOW() WHERE id='$tag_id'");
 			} else {
 				$q = $this->db->query("INSERT INTO birthdates_tags (tag, people_id)
 					VALUES ('$tag_text', " . (isset($insert_id) ? $insert_id : $id) . ")");

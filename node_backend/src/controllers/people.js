@@ -22,12 +22,19 @@ export async function loadList(user_id, people_id = null) {
   const tags = {};
   tagRows.forEach((row) => {
     if (!tags[row.people_id]) tags[row.people_id] = [];
-    tags[row.people_id].push({ id: row.id, value: row.tag });
+    tags[row.people_id].push({
+      id: row.id,
+      value: row.tag,
+      createdAt: row.dt_created,
+      updatedAt: row.dt_updated,
+    });
   });
   const peoples = rows.map((row) => ({
     value: row.id,
     name: row.peoplename,
     date: row.birthdate,
+    createdAt: row.dt_created,
+    updatedAt: row.dt_updated,
     tags: tags[row.id] || [],
   }));
   return { peoples };
@@ -85,7 +92,7 @@ export async function savePeople(id, name, date, tags, user_id) {
   for (const tag of tags) {
     const tagText = tag.label || tag.value || '';
     if (tag.value) {
-      await run('UPDATE birthdates_tags SET tag=? WHERE id=?', [tagText, tag.value]);
+      await run('UPDATE birthdates_tags SET tag=?, dt_updated=CURRENT_TIMESTAMP WHERE id=?', [tagText, tag.value]);
     } else {
       await run('INSERT INTO birthdates_tags (tag, people_id) VALUES (?, ?)', [
         tagText,
