@@ -1,18 +1,79 @@
 import React from 'react'
 import Select from 'react-select'
-// no comments
 
 class PeoplesSearch extends React.PureComponent {
-    matchesQuery = (item, q) => {
-        const query = (q || '').toString().trim().toLowerCase()
-        if (!query) return true
-        const fields = [item.name, item.date, item.age, item.tagSearch]
-        return fields.some(f => f && String(f).toLowerCase().includes(query))
+    normalizeSearchText = (value) => String(value || '')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .trim()
+
+    getSearchTokens = (q) => this.normalizeSearchText(q).split(' ').filter(Boolean)
+
+    getTagValues = (item) => {
+        if (!item.tags) return []
+        return item.tags.map(tag => {
+            if (!tag) return ''
+            if (tag.value !== undefined && tag.value !== null) return tag.value
+            if (tag.label !== undefined && tag.label !== null) return tag.label
+            return tag
+        })
+    }
+
+    getSearchFields = (item) => {
+        const tagValues = this.getTagValues(item)
+        const name = this.normalizeSearchText(item.name)
+        const tags = this.normalizeSearchText([item.tagSearch].concat(tagValues).filter(Boolean).join(' '))
+        const date = this.normalizeSearchText(item.date)
+        const age = this.normalizeSearchText(item.age)
+        const all = this.normalizeSearchText([name, tags, date, age].filter(Boolean).join(' '))
+        return { name, tags, date, age, all }
+    }
+
+    getOptionScore = (item, q) => {
+        const query = this.normalizeSearchText(q)
+        const tokens = this.getSearchTokens(query)
+        if (!tokens.length) return 1
+
+        const fields = this.getSearchFields(item)
+        const fullPhraseInName = fields.name.includes(query)
+        const fullPhraseInTags = fields.tags.includes(query)
+        const fullPhraseInDate = fields.date.includes(query) || fields.age.includes(query)
+        const fullPhraseInAll = fields.all.includes(query)
+        const allTokensMatched = tokens.every(token => fields.all.includes(token))
+        const tokenScore = tokens.reduce((score, token) => {
+            if (fields.name.includes(token)) return score + 300
+            if (fields.tags.includes(token)) return score + 150
+            if (fields.date.includes(token) || fields.age.includes(token)) return score + 80
+            return score
+        }, 0)
+
+        if (!fullPhraseInAll && !tokenScore) return 0
+
+        return (
+            (fullPhraseInName ? 10000 : 0) +
+            (fullPhraseInTags ? 9000 : 0) +
+            (fullPhraseInDate ? 8000 : 0) +
+            (fullPhraseInAll ? 7000 : 0) +
+            (allTokensMatched ? 5000 : 0) +
+            tokenScore
+        )
+    }
+
+    getRankedOptions = (peoples, q) => {
+        const query = this.normalizeSearchText(q)
+        const source = peoples || []
+        if (!query) return source
+
+        return source
+            .map((option, index) => ({ option, index, score: this.getOptionScore(option, query) }))
+            .filter(item => item.score > 0)
+            .sort((a, b) => b.score - a.score || a.index - b.index)
+            .map(item => item.option)
     }
 
     handleInputChange = (inputValue) => {
         const { peoples, onInputChange } = this.props
-        const filtered = (peoples || []).filter(opt => this.matchesQuery(opt, inputValue))
+        const filtered = this.getRankedOptions(peoples, inputValue)
         if (typeof onInputChange === 'function') {
             onInputChange(inputValue || '', filtered)
         }
@@ -63,6 +124,7 @@ class PeoplesSearch extends React.PureComponent {
 
     render() {
         const { peoples, selected, handleSelected, inputValue } = this.props
+        const rankedOptions = this.getRankedOptions(peoples, inputValue)
 
         const valueOptions = Array.isArray(selected)
             ? (peoples || []).filter(o => selected.includes(o.value))
@@ -77,11 +139,6 @@ class PeoplesSearch extends React.PureComponent {
                 const last = opts[opts.length - 1]
                 if (last) handleSelected(last.value)
             }
-        }
-
-        const filterOption = (candidate, rawInput) => {
-            const item = candidate.data.item ? candidate.data.item : candidate.data
-            return this.matchesQuery(item, rawInput)
         }
 
         const selectStyles = {
@@ -106,7 +163,7 @@ class PeoplesSearch extends React.PureComponent {
             <Select
                 name="peoples"
                 isMulti
-                options={peoples}
+                options={rankedOptions}
                 value={valueOptions}
                 placeholder="Поиск..."
                 autoFocus
@@ -117,7 +174,7 @@ class PeoplesSearch extends React.PureComponent {
                 getOptionValue={(o) => o.value}
                 getOptionLabel={(o) => o.name || String(o.value)}
                 formatOptionLabel={this.formatOptionLabel}
-                filterOption={filterOption}
+                filterOption={() => true}
                 classNamePrefix="react-select"
                 menuPortalTarget={document.body}
                 styles={selectStyles}
