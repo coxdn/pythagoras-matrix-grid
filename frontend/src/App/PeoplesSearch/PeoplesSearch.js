@@ -39,23 +39,32 @@ class PeoplesSearch extends React.PureComponent {
         const fullPhraseInTags = fields.tags.includes(query)
         const fullPhraseInDate = fields.date.includes(query) || fields.age.includes(query)
         const fullPhraseInAll = fields.all.includes(query)
-        const allTokensMatched = tokens.every(token => fields.all.includes(token))
-        const tokenScore = tokens.reduce((score, token) => {
-            if (fields.name.includes(token)) return score + 300
-            if (fields.tags.includes(token)) return score + 150
-            if (fields.date.includes(token) || fields.age.includes(token)) return score + 80
-            return score
-        }, 0)
+        const tokenMatches = tokens.reduce((matches, token) => {
+            const inName = fields.name.includes(token)
+            const inTags = fields.tags.includes(token)
+            const inDate = fields.date.includes(token) || fields.age.includes(token)
 
-        if (!fullPhraseInAll && !tokenScore) return 0
+            if (!inName && !inTags && !inDate) {
+                matches.all = false
+                return matches
+            }
+
+            if (inName) matches.name += 1
+            if (inTags) matches.tags += 1
+            if (inDate) matches.date += 1
+            return matches
+        }, { all: true, name: 0, tags: 0, date: 0 })
+
+        if (!tokenMatches.all) return 0
 
         return (
             (fullPhraseInName ? 10000 : 0) +
             (fullPhraseInTags ? 9000 : 0) +
             (fullPhraseInDate ? 8000 : 0) +
             (fullPhraseInAll ? 7000 : 0) +
-            (allTokensMatched ? 5000 : 0) +
-            tokenScore
+            (tokenMatches.name ? 3000 + tokenMatches.name * 300 : 0) +
+            (tokenMatches.tags ? 1500 + tokenMatches.tags * 150 : 0) +
+            (tokenMatches.date ? 800 + tokenMatches.date * 80 : 0)
         )
     }
 
