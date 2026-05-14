@@ -1,6 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
-import { TooltipText } from './TooltipText'
+import { TooltipText, formatAuditTooltip } from '../_components/TooltipText'
 import '../../../css/select-search.css'
 
 class PeoplesSearch extends React.PureComponent {
@@ -102,12 +102,6 @@ class PeoplesSearch extends React.PureComponent {
         }
     }
 
-    formatAuditTooltip = (createdAt, updatedAt) => {
-        const lines = []
-        if (createdAt) lines.push(`Создано: ${createdAt}`)
-        if (updatedAt) lines.push(`Изменено: ${updatedAt}`)
-        return lines.join('\n')
-    }
 
     getTagLabel = (tag) => {
         if (!tag) return ''
@@ -118,7 +112,7 @@ class PeoplesSearch extends React.PureComponent {
 
     formatOptionLabel = (option) => {
         const item = option.item ? option.item : option
-        const peopleTooltip = this.formatAuditTooltip(item.createdAt, item.updatedAt)
+        const peopleTooltip = formatAuditTooltip(item.createdAt, item.updatedAt)
         const tagStyle = {
             display: 'inline-block',
             border: '1px solid gray',
@@ -142,7 +136,7 @@ class PeoplesSearch extends React.PureComponent {
                 <TooltipText
                     key={i}
                     style={tagStyle}
-                    title={this.formatAuditTooltip(t.createdAt, t.updatedAt)}
+                    title={formatAuditTooltip(t.createdAt, t.updatedAt)}
                 >
                     {this.getTagLabel(t)}
                 </TooltipText>

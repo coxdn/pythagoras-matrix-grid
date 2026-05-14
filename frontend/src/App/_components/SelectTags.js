@@ -1,7 +1,27 @@
 import React from 'react'
 import CreatableSelect from 'react-select/creatable'
+import { components } from 'react-select'
+import { TooltipText, formatCreatedAtTooltip } from './TooltipText'
 
 import '../../../css/select-plus.css'
+import '../../../css/select-search.css'
+
+const getTagLabel = (tag) => {
+    if (!tag) return ''
+    if (tag.value !== undefined && tag.value !== null) return tag.value
+    if (tag.label !== undefined && tag.label !== null) return tag.label
+    return tag
+}
+
+const TagMultiValueLabel = (props) => {
+    const tooltip = formatCreatedAtTooltip(props.data && props.data.createdAt)
+
+    return (
+        <components.MultiValueLabel {...props}>
+            <TooltipText title={tooltip}>{getTagLabel(props.data)}</TooltipText>
+        </components.MultiValueLabel>
+    )
+}
 
 class SelectTags extends React.Component {
     // constructor(props) {
@@ -33,6 +53,8 @@ class SelectTags extends React.Component {
             options={options}
             onChange={this.handleOnChange}
             value={multiValue}
+            getOptionLabel={getTagLabel}
+            components={{ MultiValueLabel: TagMultiValueLabel }}
             formatCreateLabel={(inputValue) => inputValue}
             placeholder="Введите новые теги добавляя их нажатием Enter"
             classNamePrefix="react-select"

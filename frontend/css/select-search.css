@@ -59,3 +59,9 @@
     text-align: left;
     pointer-events: none;
 }
+
+.react-select__value-container,
+.react-select__multi-value,
+.react-select__multi-value__label {
+    overflow: visible !important;
+}
