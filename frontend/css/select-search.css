@@ -27,9 +27,9 @@
 .select-inform {
     position: absolute;
     z-index: 1;
-    top: 15px;
+    top: 0px;
     left: 580px;
-    width: 173px;
+    width: 413px;
     text-align: justify;
 }
 

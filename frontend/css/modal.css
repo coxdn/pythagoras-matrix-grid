@@ -55,6 +55,13 @@
     bottom: 15px;
 }
 
+.modal-audit-info {
+    margin: 10px 0 4px;
+    color: #777;
+    font-size: 12px;
+    line-height: 1.35;
+}
+
 @media (max-width: 992px) {
 	.ReactModalPortal>div {
 		display: block;

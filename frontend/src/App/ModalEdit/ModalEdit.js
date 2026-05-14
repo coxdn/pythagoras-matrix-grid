@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactModal from 'react-modal'
 import { connect } from 'react-redux'
-import { SelectTags } from '../_components'
+import { SelectTags, formatAuditTooltip } from '../_components'
 import { modalActions } from '../../_actions'
 import { editPeopleSelector, getIdsByValue } from '../../_selectors'
 
@@ -46,7 +46,9 @@ class ModalEdit extends React.Component {
 
   render () {
     const { _name, date, tags, edited } = this.state
-    const { _alert, people: { value }, editor: { inSaving, inRemoving }} = this.props
+    const { _alert, people, editor: { inSaving, inRemoving }} = this.props
+    const { value, createdAt, updatedAt } = people
+    const peopleAuditInfo = formatAuditTooltip(createdAt, updatedAt)
     const saveIsActive = !(!edited || (!_name && value) || (!_name && edited) || !date)
     // console.log('--- ModalEdit inSaving', inSaving, '; value=', value, this.state)
     return (
@@ -78,6 +80,12 @@ class ModalEdit extends React.Component {
               <label>Теги</label>
               <SelectTags tags={tags} onChangeTags={this.onChangeTags} />
           </div>
+          {peopleAuditInfo ?
+              <div className="modal-audit-info">
+                  {peopleAuditInfo.split('\n').map((line, index) => <div key={index}>{line}</div>)}
+              </div>
+              : null
+          }
           <div className="modal-btns-wrapper">
             <div>
               <button type="button" className={"btn btn-default btn-lg" + (saveIsActive ? '' : ' disabled')} onClick={saveIsActive ? this.savePeople : null}>
