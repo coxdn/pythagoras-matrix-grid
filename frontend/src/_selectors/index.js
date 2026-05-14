@@ -19,7 +19,12 @@ export const editPeopleSelector = createSelector(peoplesGetter, editIdAndValueGe
 		return { ...defaultPeople, date: content[id].date }
 
 	const people = peoples.filter(item => item.value==value)[0]
-	const tags = people.tags.map(tag => ({ value: tag.id, label: tag.value }))
+	const tags = people.tags.map(tag => ({
+		value: tag.id,
+		label: tag.value,
+		createdAt: tag.createdAt,
+		updatedAt: tag.updatedAt
+	}))
 	return { ...people, tags }
 })
 

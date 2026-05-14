@@ -8,8 +8,8 @@ import '../../../css/select-search.css'
 
 const getTagLabel = (tag) => {
     if (!tag) return ''
-    if (tag.value !== undefined && tag.value !== null) return tag.value
     if (tag.label !== undefined && tag.label !== null) return tag.label
+    if (tag.value !== undefined && tag.value !== null) return tag.value
     return tag
 }
 
